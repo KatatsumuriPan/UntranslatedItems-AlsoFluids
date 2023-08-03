@@ -1,0 +1,16 @@
+[
+{
+  "modid": "untranslateditems_alsofluids",
+  "name": "UntranslatedItems-AlsoFluids",
+  "description": "This is an addon to UntranslatedItems that also untranslates fluids.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Katatsumuri.pan"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
