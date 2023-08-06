@@ -1,7 +1,6 @@
 package kpan.uti_alsofluids.asm.hook;
 
 import bre.nti.LanguageMapUs;
-import bre.nti.util.ModLib;
 import kpan.uti_alsofluids.config.ConfigHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.translation.I18n;
@@ -12,7 +11,10 @@ public class LocalizedName {
 	public static LanguageMapUs langmapus = LanguageMapUs.getInstanceUs();
 
 	public static boolean showLocalize() {
-		return !ModLib.isLang(Minecraft.getMinecraft(), "en_US") && ConfigHolder.client.showLocalizedName;
+		//ModLib.isLangを使いたかったがmcp名環境では非常に面倒なため断念
+		if (Minecraft.getMinecraft().gameSettings != null && Minecraft.getMinecraft().gameSettings.language.equals("en_US"))
+			return false;
+		return ConfigHolder.client.showLocalizedName;
 	}
 
 	public static String getLocalizedName(FluidStack fluidStack) {
