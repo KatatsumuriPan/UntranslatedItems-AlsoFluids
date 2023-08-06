@@ -115,7 +115,7 @@ publishing {
     }
 }
 //*****************Start Basic*****************
-//mcmod.info��version������
+//mcmod.infoのversionを解決
 version = loadProperties("/src/main/resources/version.properties").getProperty('untranslateditems_alsofluids.version')
 processResources {
     // this will ensure that this task is redone when the versions change.
@@ -141,8 +141,8 @@ def loadProperties(filename) {
     }
     return props
 }
-//libs����jar������΂�����g���ăR���p�C��
-//compile�͔񐄏��ɁAimplementation���g��
+//libs内にjarを入れればそれも使ってコンパイル
+//compileは非推奨に、implementationを使う
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     //implementation fg.deobf("curse.maven:ModNameInCurseForgeModUrl-ProjectId:FileIdInUrl")
