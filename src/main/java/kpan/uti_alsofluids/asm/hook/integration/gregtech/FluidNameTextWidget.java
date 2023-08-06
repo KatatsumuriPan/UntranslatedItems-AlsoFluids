@@ -35,6 +35,8 @@ public class FluidNameTextWidget extends AdvancedTextWidget {
 	public void readUpdateInfo(int id, PacketBuffer buffer) {
 		if (id == 1) {
 			usNameText.clear();
+			if (localizedNameText != null)
+				localizedNameText.clear();
 			int count = buffer.readVarInt();
 
 			for (int i = 0; i < count; ++i) {
@@ -45,7 +47,8 @@ public class FluidNameTextWidget extends AdvancedTextWidget {
 				if (count == 1 && usNameText.get(0) instanceof TextComponentTranslation) {
 					TextComponentTranslation tct = (TextComponentTranslation) usNameText.get(0);
 					if (tct.getFormatArgs().length == 0) {
-						localizedNameText = new ArrayList<>();
+						if (localizedNameText == null)
+							localizedNameText = new ArrayList<>();
 						localizedNameText.add(tct.createCopy());
 					}
 				}
