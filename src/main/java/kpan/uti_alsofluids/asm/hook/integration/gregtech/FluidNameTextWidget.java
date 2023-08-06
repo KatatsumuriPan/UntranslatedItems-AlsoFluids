@@ -157,13 +157,13 @@ public class FluidNameTextWidget extends AdvancedTextWidget {
 		Position position = getPosition();
 
 		int y = position.y;
-		for (int i = 0; i < usNameText.size(); ++i) {
-			fontRenderer.drawString(usNameText.get(i).getFormattedText(), position.x, y, color);
+		for (ITextComponent iTextComponent : usNameText) {
+			fontRenderer.drawString(iTextComponent.getFormattedText(), position.x, y, color);
 			y += fontRenderer.FONT_HEIGHT + 2;
 		}
 		if (localizedNameText != null) {
-			for (int i = 0; i < localizedNameText.size(); ++i) {
-				fontRenderer.drawString(localizedNameText.get(i).getFormattedText(), position.x, y, color);
+			for (ITextComponent iTextComponent : localizedNameText) {
+				fontRenderer.drawString(iTextComponent.getFormattedText(), position.x, y, color);
 				y += fontRenderer.FONT_HEIGHT + 2;
 			}
 		}
