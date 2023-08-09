@@ -1,8 +1,5 @@
 package kpan.uti_alsofluids;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import kpan.uti_alsofluids.proxy.CommonProxy;
 import kpan.uti_alsofluids.util.handlers.RegistryHandler;
 import net.minecraft.server.MinecraftServer;
@@ -15,21 +12,26 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 //文字コードをMS932にすると日本語ベタ打ちしたものがゲーム時に文字化けしないが
 //色々と問題があるので
 //.langをちゃんと使うのを推奨
 
 @Mod(modid = ModReference.MOD_ID, name = ModReference.MOD_NAME
-, guiFactory = ModReference.SRC_DIR + ".config.ModGuiFactory"
+		, guiFactory = ModReference.SRC_DIR + ".config.ModGuiFactory"
+		, acceptableRemoteVersions = "1.3"
 //
 //,serverSideOnly = true, acceptableRemoteVersions = "*"//この2つによりサーバーのみのModにできる(デバッグ時は消す必要あり)
 )
 public class ModMain {
 
-	@Instance public static ModMain instance;
+	@Instance
+	public static ModMain instance;
 
-	@SidedProxy(clientSide = ModReference.CLIENT_PROXY_CLASS, serverSide = ModReference.COMMON_PROXY_CLASS) public static CommonProxy proxy;
+	@SidedProxy(clientSide = ModReference.CLIENT_PROXY_CLASS, serverSide = ModReference.COMMON_PROXY_CLASS)
+	public static CommonProxy proxy;
 
 	public static MinecraftServer server;
 	public static final Logger LOGGER = LogManager.getLogger();
@@ -38,13 +40,16 @@ public class ModMain {
 	public static void preInit(FMLPreInitializationEvent event) {
 		RegistryHandler.preInitRegistries(event);
 	}
-	@EventHandler
-	public static void init(FMLInitializationEvent event) { RegistryHandler.initRegistries(); }
-	@EventHandler
-	public static void postInit(FMLPostInitializationEvent event) { RegistryHandler.postInitRegistries(); }
 
 	@EventHandler
-	public static void serverInit(FMLServerStartingEvent event) { RegistryHandler.serverRegistries(event); }
+	public static void init(FMLInitializationEvent event) {RegistryHandler.initRegistries();}
+
+	@EventHandler
+	public static void postInit(FMLPostInitializationEvent event) {RegistryHandler.postInitRegistries();}
+
+	@EventHandler
+	public static void serverInit(FMLServerStartingEvent event) {RegistryHandler.serverRegistries(event);}
+
 	@EventHandler
 	public static void onServerAboutToStart(FMLServerAboutToStartEvent event) {
 		server = event.getServer();
