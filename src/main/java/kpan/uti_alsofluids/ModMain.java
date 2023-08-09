@@ -21,7 +21,8 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 //.langをちゃんと使うのを推奨
 
 @Mod(modid = ModReference.MOD_ID, name = ModReference.MOD_NAME
-, guiFactory = ModReference.SRC_DIR + ".config.ModGuiFactory"
+		, guiFactory = ModReference.SRC_DIR + ".config.ModGuiFactory"
+		, acceptableRemoteVersions = "1.3"
 //
 //,serverSideOnly = true, acceptableRemoteVersions = "*"//この2つによりサーバーのみのModにできる(デバッグ時は消す必要あり)
 )
