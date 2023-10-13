@@ -26,7 +26,6 @@ public class HK_FluidStack {
 						recursion++;
 					} else {
 						langmapus.getDisplayNameThread = Thread.currentThread();
-						HK_Fluid.setThreadAlready = true;
 					}
 					return stack.getFluid().getLocalizedName(stack);
 				} catch (Exception e) {
@@ -35,7 +34,6 @@ public class HK_FluidStack {
 				} finally {
 					if (recursion == 0) {
 						langmapus.getDisplayNameThread = null;
-						HK_Fluid.setThreadAlready = false;
 					} else {
 						recursion--;
 					}

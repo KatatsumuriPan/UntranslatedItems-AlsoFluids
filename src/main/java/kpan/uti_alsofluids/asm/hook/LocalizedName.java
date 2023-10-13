@@ -3,7 +3,7 @@ package kpan.uti_alsofluids.asm.hook;
 import bre.nti.LanguageMapUs;
 import kpan.uti_alsofluids.config.ConfigHolder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.FluidStack;
 
 public class LocalizedName {
@@ -35,13 +35,14 @@ public class LocalizedName {
 	}
 
 	public static String getUsLocalizedName(String unlocalizedName) {
-		return I18n.translateToLocal(unlocalizedName);
+		return I18n.format(unlocalizedName);
 	}
 
 	public static String getLocalizedName(String unlocalizedName) {
 		synchronized (langmapus.localizedLock) {
 			try {
-				return I18n.translateToLocal(unlocalizedName);
+				langmapus.localizedThread = Thread.currentThread();
+				return I18n.format(unlocalizedName);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return "";

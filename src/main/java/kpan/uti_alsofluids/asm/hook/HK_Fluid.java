@@ -6,10 +6,8 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-@SuppressWarnings("deprecation")
 public class HK_Fluid {
 
-	public static boolean setThreadAlready = false;
 
 	public static String getLocalizedName(Fluid fluid, FluidStack stack) {
 		if (ModMain.proxy.hasClientSide()) {
@@ -31,8 +29,6 @@ public class HK_Fluid {
 			String s = fluid.getUnlocalizedName();
 			if (s == null)
 				return "";
-			if (setThreadAlready)
-				return I18n.translateToLocal(s);
 			synchronized (langmapus.getDisplayNameLock) {
 				try {
 					if (langmapus.getDisplayNameThread != null) {

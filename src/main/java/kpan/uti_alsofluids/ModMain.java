@@ -20,10 +20,10 @@ import org.apache.logging.log4j.Logger;
 //.langをちゃんと使うのを推奨
 
 @Mod(modid = ModReference.MOD_ID, name = ModReference.MOD_NAME
-		, guiFactory = ModReference.SRC_DIR + ".config.ModGuiFactory"
-		, acceptableRemoteVersions = "1.3"
+		, dependencies = ""
+		, acceptableRemoteVersions = BuildInfo.MAJOR_VERSION + "." + BuildInfo.MINOR_VERSION
 //
-//,serverSideOnly = true, acceptableRemoteVersions = "*"//この2つによりサーバーのみのModにできる(デバッグ時は消す必要あり)
+//, serverSideOnly = true //サーバーのみにする場合に必要(acceptableRemoteVersionsを*に変えないとダメ)、デバッグ時はオフにする
 )
 public class ModMain {
 
