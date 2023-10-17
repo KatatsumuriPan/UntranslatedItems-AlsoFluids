@@ -43,13 +43,13 @@ public class ModMain {
 	}
 
 	@EventHandler
-	public static void init(FMLInitializationEvent event) {RegistryHandler.initRegistries();}
+	public static void init(FMLInitializationEvent event) { RegistryHandler.initRegistries(); }
 
 	@EventHandler
-	public static void postInit(FMLPostInitializationEvent event) {RegistryHandler.postInitRegistries();}
+	public static void postInit(FMLPostInitializationEvent event) { RegistryHandler.postInitRegistries(); }
 
 	@EventHandler
-	public static void serverInit(FMLServerStartingEvent event) {RegistryHandler.serverRegistries(event);}
+	public static void serverInit(FMLServerStartingEvent event) { RegistryHandler.serverRegistries(event); }
 
 	@EventHandler
 	public static void onServerAboutToStart(FMLServerAboutToStartEvent event) {
