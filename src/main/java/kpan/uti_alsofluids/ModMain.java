@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 //.langをちゃんと使うのを推奨
 
 @Mod(modid = ModReference.MOD_ID, name = ModReference.MOD_NAME
+		, guiFactory = ModReference.SRC_DIR + ".config.ModGuiFactory"
 		, dependencies = ""
 		, acceptableRemoteVersions = BuildInfo.MAJOR_VERSION + "." + BuildInfo.MINOR_VERSION
 //
