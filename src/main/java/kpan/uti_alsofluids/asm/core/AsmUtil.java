@@ -1,7 +1,6 @@
 package kpan.uti_alsofluids.asm.core;
 
-import javax.annotation.Nullable;
-
+import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.MethodVisitor;
@@ -10,12 +9,22 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
 
-import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
+import javax.annotation.Nullable;
+import java.lang.reflect.Method;
 
 public class AsmUtil {
 	public static final int ASM_VER = Opcodes.ASM5;
 
 	public static boolean isDeobfEnvironment() { return FMLLaunchHandler.isDeobfuscatedEnvironment(); }
+
+	public static boolean isOptifineLoaded() {
+		try {
+			Class.forName("optifine.Patcher");
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+		return true;
+	}
 
 	//MethodDescにも使用可能
 	public static String obfDesc(String deobfDesc) {
@@ -111,11 +120,14 @@ public class AsmUtil {
 				sb.append(toDesc(o));
 			}
 			return sb.toString();
+		} else if (raw instanceof Method) {
+			return Type.getMethodDescriptor((Method) raw);
 		} else {
 			throw new IllegalArgumentException();
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public static MethodVisitor traceMethod(MethodVisitor mv, @Nullable String methodName) {
 		Textifier p = new MyTextifier(methodName);
 		TraceMethodVisitor tracemv = new TraceMethodVisitor(mv, p);
@@ -140,6 +152,46 @@ public class AsmUtil {
 
 	public static String[] runtimeExceptions(String[] deobfExceptions) {
 		throw new NotImplementedException("TODO");//TODO
+	}
+
+	public static int loadOpcode(String type) {
+		switch (type) {
+			case AsmTypes.BOOL:
+			case AsmTypes.CHAR:
+			case AsmTypes.BYTE:
+			case AsmTypes.SHORT:
+			case AsmTypes.INT:
+				return Opcodes.ILOAD;
+			case AsmTypes.LONG:
+				return Opcodes.LLOAD;
+			case AsmTypes.FLOAT:
+				return Opcodes.FLOAD;
+			case AsmTypes.DOUBLE:
+				return Opcodes.DLOAD;
+			default:
+				return Opcodes.ALOAD;
+		}
+	}
+
+	public static int returnOpcode(String type) {
+		switch (type) {
+			case AsmTypes.VOID:
+				return Opcodes.RETURN;
+			case AsmTypes.BOOL:
+			case AsmTypes.CHAR:
+			case AsmTypes.BYTE:
+			case AsmTypes.SHORT:
+			case AsmTypes.INT:
+				return Opcodes.IRETURN;
+			case AsmTypes.LONG:
+				return Opcodes.LRETURN;
+			case AsmTypes.FLOAT:
+				return Opcodes.FRETURN;
+			case AsmTypes.DOUBLE:
+				return Opcodes.DRETURN;
+			default:
+				return Opcodes.ARETURN;
+		}
 	}
 
 }
