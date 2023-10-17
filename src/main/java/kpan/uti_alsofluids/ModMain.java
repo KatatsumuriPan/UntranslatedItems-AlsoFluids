@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 //.langをちゃんと使うのを推奨
 
 @Mod(modid = ModReference.MOD_ID, name = ModReference.MOD_NAME
+		, guiFactory = ModReference.SRC_DIR + ".config.ModGuiFactory"
 		, dependencies = ""
 		, acceptableRemoteVersions = BuildInfo.MAJOR_VERSION + "." + BuildInfo.MINOR_VERSION
 //
@@ -42,13 +43,13 @@ public class ModMain {
 	}
 
 	@EventHandler
-	public static void init(FMLInitializationEvent event) {RegistryHandler.initRegistries();}
+	public static void init(FMLInitializationEvent event) { RegistryHandler.initRegistries(); }
 
 	@EventHandler
-	public static void postInit(FMLPostInitializationEvent event) {RegistryHandler.postInitRegistries();}
+	public static void postInit(FMLPostInitializationEvent event) { RegistryHandler.postInitRegistries(); }
 
 	@EventHandler
-	public static void serverInit(FMLServerStartingEvent event) {RegistryHandler.serverRegistries(event);}
+	public static void serverInit(FMLServerStartingEvent event) { RegistryHandler.serverRegistries(event); }
 
 	@EventHandler
 	public static void onServerAboutToStart(FMLServerAboutToStartEvent event) {

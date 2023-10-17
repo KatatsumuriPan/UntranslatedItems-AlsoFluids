@@ -1,18 +1,17 @@
 package kpan.uti_alsofluids.asm.core.adapters;
 
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-
 import kpan.uti_alsofluids.asm.core.AsmTypes;
 import kpan.uti_alsofluids.asm.core.AsmTypes.MethodDesc;
 import kpan.uti_alsofluids.asm.core.AsmUtil;
 import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper;
 import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper.MethodRemap;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class ReplaceRefMethodAdapter extends ReplaceMethodAdapter {
 
-	private final String target;
+	private final String runtimeClassForRefMethodParam;
 	private final String originalName;
 	private final String refClass;
 	private final String returnType;
@@ -21,16 +20,16 @@ public class ReplaceRefMethodAdapter extends ReplaceMethodAdapter {
 	public ReplaceRefMethodAdapter(ClassVisitor cv, String refClass, MethodRemap method) {
 		super(cv, method);
 		originalName = runtimeName;
-		target = MyAsmNameRemapper.runtimeClass(method.deobfOwner);
+		runtimeClassForRefMethodParam = MyAsmNameRemapper.runtimeClass(method.deobfOwner);
 		this.refClass = refClass;
 		MethodDesc md = MethodDesc.fromMethodDesc(AsmUtil.runtimeDesc(method.deobfMethodDesc));
 		returnType = md.returnDesc;
 		params = md.paramsDesc;
 	}
-	public ReplaceRefMethodAdapter(ClassVisitor cv, String refClass, String runtimeTarget, String runtimeMethodName, String runtimeDesc) {
+	public ReplaceRefMethodAdapter(ClassVisitor cv, String refClass, String runtimeClassForRefMethodParam, String runtimeMethodName, String runtimeDesc) {
 		super(cv, runtimeMethodName, runtimeDesc);
 		originalName = runtimeName;
-		target = runtimeTarget;
+		this.runtimeClassForRefMethodParam = runtimeClassForRefMethodParam;
 		this.refClass = refClass;
 		MethodDesc md = MethodDesc.fromMethodDesc(runtimeDesc);
 		returnType = md.returnDesc;
@@ -66,7 +65,7 @@ public class ReplaceRefMethodAdapter extends ReplaceMethodAdapter {
 		if (is_static)
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC, refClass, originalName, runtimeDesc, false);
 		else
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, refClass, originalName, AsmUtil.runtimeDesc(AsmUtil.toMethodDesc(returnType, target, params)), false);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, refClass, originalName, AsmUtil.runtimeDesc(AsmUtil.toMethodDesc(returnType, runtimeClassForRefMethodParam, params)), false);
 
 		//return
 		if (returnType.equals(AsmTypes.VOID))

@@ -1,20 +1,18 @@
 package kpan.uti_alsofluids.asm.core.adapters;
 
-import javax.annotation.Nullable;
-
+import com.google.common.collect.HashBiMap;
+import kpan.uti_alsofluids.asm.core.AsmUtil;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.TypePath;
 
-import com.google.common.collect.HashBiMap;
-
-import kpan.uti_alsofluids.asm.core.AsmUtil;
+import javax.annotation.Nullable;
 
 public class MyMethodVisitor extends MethodVisitor {
 
 	private final String nameForDebug;
-	private int successed = 0;
+	private int success = 0;
 	private int successExpectedMinInclusive;
 	private int successExpectedMaxInclusive;
 
@@ -28,10 +26,24 @@ public class MyMethodVisitor extends MethodVisitor {
 		this.successExpectedMinInclusive = Math.max(successExpectedMinInclusive, 0);
 		this.successExpectedMaxInclusive = Math.max(successExpectedMaxInclusive, 0);
 	}
-	public void setSuccessExpectedMin(int minInclusive) { successExpectedMinInclusive = Math.max(minInclusive, 0); }
-	public void setSuccessExpectedMax(int maxInclusive) { successExpectedMaxInclusive = Math.max(maxInclusive, 0); }
+	public MyMethodVisitor setSuccessExpected(int successExpected) {
+		setSuccessExpectedMin(successExpected);
+		setSuccessExpectedMax(successExpected);
+		return this;
+	}
+	public MyMethodVisitor setSuccessExpectedMin(int minInclusive) {
+		successExpectedMinInclusive = Math.max(minInclusive, 0);
+		return this;
+	}
+	public MyMethodVisitor setSuccessExpectedMax(int maxInclusive) {
+		successExpectedMaxInclusive = Math.max(maxInclusive, 0);
+		return this;
+	}
 	protected void success() {
-		successed++;
+		success++;
+	}
+	public int getSuccess() {
+		return success;
 	}
 	@Nullable
 	public Label tryGetLabel(int index) { return labels.inverse().get(index); }
@@ -98,13 +110,13 @@ public class MyMethodVisitor extends MethodVisitor {
 	@Override
 	public void visitEnd() {
 		super.visitEnd();
-		if (successed < successExpectedMinInclusive || successed > successExpectedMaxInclusive) {
+		if (success < successExpectedMinInclusive || success > successExpectedMaxInclusive) {
 			if (successExpectedMinInclusive == successExpectedMaxInclusive)
-				throw new RuntimeException("transform failed:" + nameForDebug + "\nexpected:" + successExpectedMinInclusive + "\nactual:" + successed);
+				throw new RuntimeException("transform failed:" + nameForDebug + "\nexpected:" + successExpectedMinInclusive + "\nactual:" + success);
 			else if (successExpectedMaxInclusive == Integer.MAX_VALUE)
-				throw new RuntimeException("transform failed:" + nameForDebug + "\nexpected: " + successExpectedMinInclusive + "~\nactual:" + successed);
+				throw new RuntimeException("transform failed:" + nameForDebug + "\nexpected: " + successExpectedMinInclusive + "~\nactual:" + success);
 			else
-				throw new RuntimeException("transform failed:" + nameForDebug + "\nexpected: " + successExpectedMinInclusive + "~" + successExpectedMaxInclusive + "\nactual:" + successed);
+				throw new RuntimeException("transform failed:" + nameForDebug + "\nexpected: " + successExpectedMinInclusive + "~" + successExpectedMaxInclusive + "\nactual:" + success);
 		}
 	}
 

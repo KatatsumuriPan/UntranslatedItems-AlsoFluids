@@ -4,6 +4,7 @@ import kpan.uti_alsofluids.asm.core.AsmTypes;
 import kpan.uti_alsofluids.asm.core.adapters.Instructions;
 import kpan.uti_alsofluids.asm.core.adapters.Instructions.OpcodeInt;
 import kpan.uti_alsofluids.asm.core.adapters.MyClassVisitor;
+import kpan.uti_alsofluids.asm.core.adapters.MyMethodVisitor;
 import kpan.uti_alsofluids.asm.core.adapters.ReplaceInstructionsAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -45,7 +46,41 @@ public class TF_MetaTileEntityFluidHatch {
 										.invokespecial(TARGET, "getFluidNameText", "(Lgregtech/api/gui/widgets/TankWidget;)Ljava/util/function/Consumer;")
 										.ldcInsn(16777215)
 										.invokespecial(FLUID_NAME_TEXT_WIDGET, "<init>", "(IILjava/util/function/Consumer;I)V")
-						);
+						).setSuccessExpectedMin(0);
+						mv = new ReplaceInstructionsAdapter(mv, name,
+								Instructions.create()
+										.aload(4)
+										.intInsn(OpcodeInt.BIPUSH, 11)
+										.intInsn(OpcodeInt.BIPUSH, 40)
+										.aload(5)
+										.insn(Opcodes.DUP)
+										.invokeVirtual(AsmTypes.OBJECT, "getClass", "()Ljava/lang/Class;")
+										.insn(Opcodes.POP)
+										.rep()
+										.ldcInsn(16777215)
+										.invokeVirtual("gregtech/api/gui/ModularUI$Builder", "dynamicLabel", "(IILjava/util/function/Supplier;I)Lgregtech/api/gui/ModularUI$Builder;")
+										.insn(Opcodes.POP)
+								,
+								Instructions.create()
+										.aload(4)
+										.typeInsn(Opcodes.NEW, FLUID_NAME_TEXT_WIDGET)
+										.insn(Opcodes.DUP)
+										.intInsn(OpcodeInt.BIPUSH, 11)
+										.intInsn(OpcodeInt.BIPUSH, 40)
+										.aload(5)
+										.ldcInsn(16777215)
+										.invokespecial(FLUID_NAME_TEXT_WIDGET, "<init>", "(IILgregtech/api/gui/widgets/TankWidget;I)V")
+										.invokeVirtual("gregtech/api/gui/ModularUI$Builder", "widget", "(Lgregtech/api/gui/Widget;)Lgregtech/api/gui/ModularUI$Builder;")
+										.insn(Opcodes.POP)
+						) {
+							@Override
+							public void visitEnd() {
+								super.visitEnd();
+								if (getSuccess() + ((MyMethodVisitor) mv).getSuccess() != 1) {
+									throw new RuntimeException("transform failed:" + nameForDebug + "\nexpected:" + 1 + "\nactual:" + getSuccess() + ((MyMethodVisitor) mv).getSuccess());
+								}
+							}
+						}.setSuccessExpectedMin(0);
 						success();
 					}
 					return mv;

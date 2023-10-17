@@ -2,16 +2,19 @@ package kpan.uti_alsofluids.asm.hook.integration.gregtech;
 
 import gregtech.api.gui.IRenderContext;
 import gregtech.api.gui.widgets.AdvancedTextWidget;
+import gregtech.api.gui.widgets.TankWidget;
 import gregtech.api.util.Position;
 import gregtech.api.util.Size;
 import kpan.uti_alsofluids.asm.hook.LocalizedName;
 import kpan.uti_alsofluids.config.ConfigHolder;
+import kpan.uti_alsofluids.util.MyReflectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -31,6 +34,13 @@ public class FluidNameTextWidget extends AdvancedTextWidget {
 		this.color = color;
 	}
 
+	public FluidNameTextWidget(int xPosition, int yPosition, TankWidget tankWidget, int color) {
+		this(xPosition, yPosition, list -> {
+			FluidStack fluidStack = getLastTankInFluid(tankWidget);
+			if (fluidStack != null)
+				list.add(new TextComponentTranslation(fluidStack.getUnlocalizedName()));
+		}, color);
+	}
 	@Override
 	public void readUpdateInfo(int id, PacketBuffer buffer) {
 		if (id == 1) {
@@ -149,6 +159,9 @@ public class FluidNameTextWidget extends AdvancedTextWidget {
 			localizedNameText = localizedNameText.stream().flatMap((c) -> {
 				return GuiUtilRenderComponents.splitText(c, maxTextWidthResult, fontRenderer, true, true).stream();
 			}).collect(Collectors.toList());
+			if (usNameText.stream().map(ITextComponent::getFormattedText).collect(Collectors.joining("")).equals(localizedNameText.stream().map(ITextComponent::getFormattedText).collect(Collectors.joining("")))) {
+				localizedNameText = null;
+			}
 		}
 	}
 
@@ -171,6 +184,10 @@ public class FluidNameTextWidget extends AdvancedTextWidget {
 			}
 		}
 
+	}
+
+	private static FluidStack getLastTankInFluid(TankWidget tankWidget) {
+		return MyReflectionHelper.getPrivateField(tankWidget, "lastFluidInTank");
 	}
 
 }
