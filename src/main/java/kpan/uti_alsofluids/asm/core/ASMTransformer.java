@@ -1,6 +1,8 @@
 package kpan.uti_alsofluids.asm.core;
 
 import kpan.uti_alsofluids.asm.tf.TF_Fluid;
+import kpan.uti_alsofluids.asm.tf.TF_FluidRegistry_LAVA;
+import kpan.uti_alsofluids.asm.tf.TF_FluidRegistry_WATER;
 import kpan.uti_alsofluids.asm.tf.TF_FluidStack;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiCraft__;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidSlot;
@@ -49,6 +51,8 @@ public class ASMTransformer implements IClassTransformer {
 			//Adapterを通して書き換え出来るようにする。
 			ClassVisitor cv = cw;
 			cv = TF_Fluid.appendVisitor(cv, transformedName);
+			cv = TF_FluidRegistry_LAVA.appendVisitor(cv, transformedName);
+			cv = TF_FluidRegistry_WATER.appendVisitor(cv, transformedName);
 			cv = TF_FluidStack.appendVisitor(cv, transformedName);
 			cv = TF_FluidStackRenderer.appendVisitor(cv, transformedName);
 			cv = TF_GuiCraft__.appendVisitor(cv, transformedName);
