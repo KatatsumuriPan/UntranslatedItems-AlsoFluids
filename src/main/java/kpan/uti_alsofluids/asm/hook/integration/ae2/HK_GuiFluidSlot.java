@@ -9,10 +9,14 @@ public class HK_GuiFluidSlot {
 
 	public static String getBothNames(FluidStack stack) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(stack.getLocalizedName());
+		String us_name = stack.getLocalizedName();
+		sb.append(us_name);
 		if (LocalizedName.showLocalize() && ConfigHolder.client.AppliedEnergistcs2.showLocalizedNameOnTerminal) {
-			sb.append('\n');
-			sb.append(TextFormatting.GRAY + LocalizedName.getLocalizedName(stack));
+			String localized = LocalizedName.getLocalizedName(stack);
+			if (!us_name.equals(localized)) {
+				sb.append('\n');
+				sb.append(TextFormatting.GRAY + localized);
+			}
 		}
 		return sb.toString();
 	}

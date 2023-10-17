@@ -11,8 +11,12 @@ import java.util.List;
 public class HK_TankWidget {
 
 	public static void addBothNames(List<String> tooltip, Fluid fluid, FluidStack stack) {
-		tooltip.add(stack.getLocalizedName());
-		if (LocalizedName.showLocalize() && ConfigHolder.client.GregTechCEu.showLocalizedName)
-			tooltip.add(TextFormatting.GRAY + LocalizedName.getLocalizedName(stack));
+		String us_name = stack.getLocalizedName();
+		tooltip.add(us_name);
+		if (LocalizedName.showLocalize() && ConfigHolder.client.GregTechCEu.showLocalizedName) {
+			String localized = LocalizedName.getLocalizedName(stack);
+			if (!us_name.equals(localized))
+				tooltip.add(TextFormatting.GRAY + localized);
+		}
 	}
 }

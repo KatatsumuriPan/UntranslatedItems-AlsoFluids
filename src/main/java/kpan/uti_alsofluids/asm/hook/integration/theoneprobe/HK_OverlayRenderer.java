@@ -43,7 +43,9 @@ public class HK_OverlayRenderer {
 				if (children != null) {
 					if (LocalizedName.showLocalize() && ConfigHolder.client.TheOneProbe.showLocalizedNameBlock) {
 						FluidStack fluidStack = new FluidStack(fluid, 1000);
-						children.add(1, new ElementText(TextStyleClass.NAME + LocalizedName.getLocalizedName(fluidStack)));
+						String localized = LocalizedName.getLocalizedName(fluidStack);
+						if (!fluidStack.getLocalizedName().equals(localized))
+							children.add(1, new ElementText(TextStyleClass.NAME + localized));
 					}
 				}
 			}

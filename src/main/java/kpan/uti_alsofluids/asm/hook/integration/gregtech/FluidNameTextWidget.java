@@ -159,6 +159,9 @@ public class FluidNameTextWidget extends AdvancedTextWidget {
 			localizedNameText = localizedNameText.stream().flatMap((c) -> {
 				return GuiUtilRenderComponents.splitText(c, maxTextWidthResult, fontRenderer, true, true).stream();
 			}).collect(Collectors.toList());
+			if (usNameText.stream().map(ITextComponent::getFormattedText).collect(Collectors.joining("")).equals(localizedNameText.stream().map(ITextComponent::getFormattedText).collect(Collectors.joining("")))) {
+				localizedNameText = null;
+			}
 		}
 	}
 

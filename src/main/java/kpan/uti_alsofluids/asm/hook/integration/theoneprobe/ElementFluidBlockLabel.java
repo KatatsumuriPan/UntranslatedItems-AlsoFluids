@@ -32,7 +32,7 @@ public class ElementFluidBlockLabel implements IElement {
 	}
 
 	@Override
-	public int getID() {return elementId;}
+	public int getID() { return elementId; }
 
 	@Override
 	public int getWidth() {
@@ -46,9 +46,13 @@ public class ElementFluidBlockLabel implements IElement {
 
 	@Override
 	public void render(int x, int y) {
-		ElementTextRender.render(fluidStack.getLocalizedName(), x, y);
-		if (LocalizedName.showLocalize() && ConfigHolder.client.TheOneProbe.showLocalizedNameBlock)
-			ElementTextRender.render(LocalizedName.getLocalizedName(fluidStack), x, y + 10);
+		String us_name = fluidStack.getLocalizedName();
+		ElementTextRender.render(us_name, x, y);
+		if (LocalizedName.showLocalize() && ConfigHolder.client.TheOneProbe.showLocalizedNameBlock) {
+			String localized = LocalizedName.getLocalizedName(fluidStack);
+			if (!us_name.equals(localized))
+				ElementTextRender.render(localized, x, y + 10);
+		}
 	}
 
 	@Override

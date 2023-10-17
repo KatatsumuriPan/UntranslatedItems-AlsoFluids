@@ -8,10 +8,13 @@ import kpan.uti_alsofluids.config.ConfigHolder;
 public class HookGuiCraft__ {
 
 	public static String getBothNames(Object o) {
-		if (LocalizedName.showLocalize() && ConfigHolder.client.AppliedEnergistcs2.showLocalizedNameOnCraftingStatus)
-			return Platform.getItemDisplayName(o) + "\n" + getLocalizedName(o);
-		else
-			return Platform.getItemDisplayName(o);
+		String us_name = Platform.getItemDisplayName(o);
+		if (LocalizedName.showLocalize() && ConfigHolder.client.AppliedEnergistcs2.showLocalizedNameOnCraftingStatus) {
+			String localized = getLocalizedName(o);
+			if (!us_name.equals(localized))
+				return us_name + "\n" + localized;
+		}
+		return us_name;
 	}
 
 	public static String getLocalizedName(Object o) {

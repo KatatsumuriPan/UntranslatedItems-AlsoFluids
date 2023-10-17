@@ -10,8 +10,12 @@ import java.util.List;
 public class HK_FluidStackRenderer {
 
 	public static void addBothNames(List<String> tooltip, FluidStack stack) {
-		tooltip.add(stack.getLocalizedName());
-		if (LocalizedName.showLocalize() && ConfigHolder.client.JEI.showLocalizedName)
-			tooltip.add(TextFormatting.GRAY + LocalizedName.getLocalizedName(stack));
+		String us_name = stack.getLocalizedName();
+		tooltip.add(us_name);
+		if (LocalizedName.showLocalize() && ConfigHolder.client.JEI.showLocalizedName) {
+			String localized = LocalizedName.getLocalizedName(stack);
+			if (!us_name.equals(localized))
+				tooltip.add(TextFormatting.GRAY + localized);
+		}
 	}
 }
