@@ -149,7 +149,7 @@ repositories {
 dependencies {
     implementation fg.deobf("curse.maven:untranslated-items-401770:3151260")
     implementation fg.deobf("curse.maven:ae2-extended-life-570458:4673868")
-    implementation fg.deobf("curse.maven:gregtech-ce-unofficial-557242:4644635")
+    implementation fg.deobf("curse.maven:gregtech-ce-unofficial-557242:4799055")
     implementation fg.deobf("curse.maven:the-one-probe-245211:2667280")
     runtimeOnly fg.deobf("curse.maven:codechicken-lib-1-8-242818:2779848")
 }
