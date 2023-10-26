@@ -8,6 +8,8 @@ import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiCraft__;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidSlot;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidTank;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidTerminal;
+import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_AEFluidConfigSlot;
+import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_AEFluidDisplayWidget;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_MaterialFluid;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_MetaTileEntityFluidHatch;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_MetaTileEntityQuantumTank;
@@ -50,6 +52,8 @@ public class ASMTransformer implements IClassTransformer {
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);//maxStack,maxLocal,frameの全てを計算
 			//Adapterを通して書き換え出来るようにする。
 			ClassVisitor cv = cw;
+			cv = TF_AEFluidConfigSlot.appendVisitor(cv, transformedName);
+			cv = TF_AEFluidDisplayWidget.appendVisitor(cv, transformedName);
 			cv = TF_Fluid.appendVisitor(cv, transformedName);
 			cv = TF_FluidRegistry_LAVA.appendVisitor(cv, transformedName);
 			cv = TF_FluidRegistry_WATER.appendVisitor(cv, transformedName);
