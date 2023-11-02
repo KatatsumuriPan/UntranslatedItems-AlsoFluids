@@ -1,5 +1,21 @@
 package kpan.uti_alsofluids.asm.core;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import kpan.uti_alsofluids.util.MyReflectionHelper;
+import net.minecraft.launchwrapper.LaunchClassLoader;
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
+import net.minecraftforge.fml.common.patcher.ClassPatchManager;
+import org.apache.logging.log4j.LogManager;
+import org.objectweb.asm.ClassReader;
+
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,25 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.objectweb.asm.ClassReader;
-
-import com.google.common.base.Strings;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
-import kpan.uti_alsofluids.util.MyReflectionHelper;
-import net.minecraft.launchwrapper.LaunchClassLoader;
-import net.minecraftforge.fml.common.FMLLog;
-import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
-import net.minecraftforge.fml.common.patcher.ClassPatchManager;
 
 public class MyAsmNameRemapper {
 
@@ -46,15 +43,10 @@ public class MyAsmNameRemapper {
 
 	public static void init() {
 		if (classLoader == null) {
-			try {
-				classLoader = MyReflectionHelper.getPrivateField(FMLDeobfuscatingRemapper.INSTANCE, "classLoader");
-				loadDeobfMap();
-				loadMcpMap();
-				LogManager.getLogger().info("Srg Rename Mapping Loaded Completely");
-			} catch (IOException e) {
-				System.out.println("An error occurred loading the srg map data");
-				System.out.println(e);
-			}
+			classLoader = MyReflectionHelper.getPrivateField(FMLDeobfuscatingRemapper.INSTANCE, "classLoader");
+			loadDeobfMap();
+			//loadMcpMap();
+			LogManager.getLogger().info("Srg Rename Mapping Loaded Completely");
 		}
 	}
 	private static void loadDeobfMap() {
@@ -68,49 +60,49 @@ public class MyAsmNameRemapper {
 			while ((line = reader.readLine()) != null) {
 				String[] split = line.split(" ");
 				switch (split[0]) {
-				case "CL:":
-					//CL: deobfName deobfName
-					break;
-				case "FD:": {
-					//FD: srgFullName mcpFullName
-					int srg_name_idx = split[1].lastIndexOf('/') + 1;
-					String srg_class = split[1].substring(0, srg_name_idx - 1);
-					String srg_name = split[1].substring(srg_name_idx);
-					int mcp_name_idx = split[2].lastIndexOf('/') + 1;
-					String mcp_class = split[2].substring(0, mcp_name_idx - 1);
-					String mcp_name = split[2].substring(mcp_name_idx);
-					if (!srg_class.equals(mcp_class)) {
-						System.out.println("not same class?");
-						System.out.println(srg_class + "," + mcp_class);
+					case "CL:":
+						//CL: deobfName deobfName
+						break;
+					case "FD:": {
+						//FD: srgFullName mcpFullName
+						int srg_name_idx = split[1].lastIndexOf('/') + 1;
+						String srg_class = split[1].substring(0, srg_name_idx - 1);
+						String srg_name = split[1].substring(srg_name_idx);
+						int mcp_name_idx = split[2].lastIndexOf('/') + 1;
+						String mcp_class = split[2].substring(0, mcp_name_idx - 1);
+						String mcp_name = split[2].substring(mcp_name_idx);
+						if (!srg_class.equals(mcp_class)) {
+							System.out.println("not same class?");
+							System.out.println(srg_class + "," + mcp_class);
+						}
+						if (!rawFieldSrgMcpMap.containsKey(srg_class))
+							rawFieldSrgMcpMap.put(srg_class, HashBiMap.create());
+						rawFieldSrgMcpMap.get(srg_class).put(srg_name, mcp_name);
+						break;
 					}
-					if (!rawFieldSrgMcpMap.containsKey(srg_class))
-						rawFieldSrgMcpMap.put(srg_class, HashBiMap.create());
-					rawFieldSrgMcpMap.get(srg_class).put(srg_name, mcp_name);
-					break;
-				}
-				case "MD:": {
-					//MD: srgFullName desc mcpFullName desc
-					int srg_name_idx = split[1].lastIndexOf('/') + 1;
-					String srg_class = split[1].substring(0, srg_name_idx - 1);
-					String srg_name = split[1].substring(srg_name_idx);
-					String srg_desc = split[2];
-					int mcp_name_idx = split[3].lastIndexOf('/') + 1;
-					String mcp_class = split[3].substring(0, mcp_name_idx - 1);
-					String mcp_name = split[3].substring(mcp_name_idx);
-					String mcp_desc = split[4];
-					if (!srg_class.equals(mcp_class)) {
-						System.out.println("not same class?");
-						System.out.println(srg_class + "," + mcp_class);
+					case "MD:": {
+						//MD: srgFullName desc mcpFullName desc
+						int srg_name_idx = split[1].lastIndexOf('/') + 1;
+						String srg_class = split[1].substring(0, srg_name_idx - 1);
+						String srg_name = split[1].substring(srg_name_idx);
+						String srg_desc = split[2];
+						int mcp_name_idx = split[3].lastIndexOf('/') + 1;
+						String mcp_class = split[3].substring(0, mcp_name_idx - 1);
+						String mcp_name = split[3].substring(mcp_name_idx);
+						String mcp_desc = split[4];
+						if (!srg_class.equals(mcp_class)) {
+							System.out.println("not same class?");
+							System.out.println(srg_class + "," + mcp_class);
+						}
+						if (!srg_desc.equals(mcp_desc)) {
+							System.out.println("not same desc?");
+							System.out.println(srg_desc + "," + mcp_desc);
+						}
+						if (!rawMethodSrgMcpMap.containsKey(srg_class))
+							rawMethodSrgMcpMap.put(srg_class, HashBiMap.create());
+						rawMethodSrgMcpMap.get(srg_class).put(new NameDescPair(srg_name, srg_desc), new NameDescPair(mcp_name, mcp_desc));
+						break;
 					}
-					if (!srg_desc.equals(mcp_desc)) {
-						System.out.println("not same desc?");
-						System.out.println(srg_desc + "," + mcp_desc);
-					}
-					if (!rawMethodSrgMcpMap.containsKey(srg_class))
-						rawMethodSrgMcpMap.put(srg_class, HashBiMap.create());
-					rawMethodSrgMcpMap.get(srg_class).put(new NameDescPair(srg_name, srg_desc), new NameDescPair(mcp_name, mcp_desc));
-					break;
-				}
 				}
 			}
 		}
@@ -276,7 +268,7 @@ public class MyAsmNameRemapper {
 			return;
 
 		String deobf = getClassDeobfName(obfName);
-		List<String> allParents = ImmutableList.<String> builder().add(superName).addAll(Arrays.asList(interfaces)).build();
+		List<String> allParents = ImmutableList.<String>builder().add(superName).addAll(Arrays.asList(interfaces)).build();
 		// generate maps for all parent objects
 		for (String parentThing : allParents) {
 			if (!fieldSrgMcpMap.containsKey(parentThing)) {
@@ -343,7 +335,10 @@ public class MyAsmNameRemapper {
 		public final String name;
 		public final String desc;
 
-		public NameDescPair(String name, String desc) { this.name = name; this.desc = desc; }
+		public NameDescPair(String name, String desc) {
+			this.name = name;
+			this.desc = desc;
+		}
 
 		@Override
 		public boolean equals(Object obj) {
@@ -378,11 +373,11 @@ public class MyAsmNameRemapper {
 
 		public Object[] toRuntime() {
 			if (AsmUtil.isDeobfEnvironment())
-				return new Object[] { deobfOwner, mcpFieldName, deobfDesc };
+				return new Object[]{deobfOwner, mcpFieldName, deobfDesc};
 			String obf_owner = getClassObfName(deobfOwner);
 			String srg_name = mcp2SrgFieldName(obf_owner, mcpFieldName);
 			String obf_name = srg2ObfFieldName(obf_owner, srg_name);
-			return new Object[] { obf_owner, obf_name, AsmUtil.obfDesc(deobfDesc) };
+			return new Object[]{obf_owner, obf_name, AsmUtil.obfDesc(deobfDesc)};
 		}
 
 	}
@@ -412,13 +407,13 @@ public class MyAsmNameRemapper {
 
 		public Object[] toRuntime() {
 			if (AsmUtil.isDeobfEnvironment()) {
-				return new Object[] { deobfOwner, mcpMethodName, deobfMethodDesc };
+				return new Object[]{deobfOwner, mcpMethodName, deobfMethodDesc};
 			} else {
 				String obf_owner = getClassObfName(deobfOwner);
 				String obf_methoddesc = AsmUtil.obfDesc(deobfMethodDesc);
 				String srg_name = mcp2SrgMethodName(obf_owner, mcpMethodName, deobfMethodDesc);
 				String obf_name = srg2ObfMethodName(obf_owner, srg_name, obf_methoddesc);
-				return new Object[] { obf_owner, obf_name, obf_methoddesc };
+				return new Object[]{obf_owner, obf_name, obf_methoddesc};
 			}
 		}
 
