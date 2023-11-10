@@ -1,5 +1,6 @@
 package kpan.uti_alsofluids;
 
+import gregtech.GTInternalTags;
 import kpan.uti_alsofluids.proxy.CommonProxy;
 import kpan.uti_alsofluids.util.handlers.RegistryHandler;
 import net.minecraft.server.MinecraftServer;
@@ -21,7 +22,8 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = ModReference.MOD_ID, name = ModReference.MOD_NAME
 		, guiFactory = ModReference.SRC_DIR + ".config.ModGuiFactory"
-		, dependencies = ""
+		, dependencies = "required:untranslateditems@[1.0.0,);"
+		+ GTInternalTags.DEP_VERSION_STRING
 		, acceptableRemoteVersions = BuildInfo.MAJOR_VERSION + "." + BuildInfo.MINOR_VERSION
 //
 //, serverSideOnly = true //サーバーのみにする場合に必要(acceptableRemoteVersionsを*に変えないとダメ)、デバッグ時はオフにする
