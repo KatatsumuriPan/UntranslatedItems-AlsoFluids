@@ -1,3 +1,6 @@
+version 1.5.0 :
+ Update the GTCEu dependency version to 2.8.0(before 2.8 is no longer supported).
+ Internal refactoring.
 version 1.4.2 :
  Update the GTCEu dependency version to 2.7.4.
  Fix bug that no localized name was displayed in ME stocking Input/Output Hatch(GTCEu).
