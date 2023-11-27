@@ -1,14 +1,15 @@
 package kpan.uti_alsofluids.asm.hook.integration.gregtech;
 
 import bre.nti.LanguageMapUs;
-import gregtech.api.fluids.MaterialFluid;
+import gregtech.api.fluids.GTFluid.GTMaterialFluid;
 import kpan.uti_alsofluids.ModMain;
+import kpan.uti_alsofluids.util.MyReflectionHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.FluidStack;
 
-public class HK_MaterialFluid {
+public class HK_GTMaterialFluid {
 
-	public static String getLocalizedName(MaterialFluid self, FluidStack stack) {
+	public static String getLocalizedName(GTMaterialFluid self, FluidStack stack) {
 		if (ModMain.proxy.hasClientSide()) {
 			return ClientOnly.getLocalizedName(self);
 		} else {
@@ -21,7 +22,7 @@ public class HK_MaterialFluid {
 		private static LanguageMapUs langmapus = LanguageMapUs.getInstanceUs();
 		private static int recursion = 0;
 
-		public static String getLocalizedName(MaterialFluid materialFluid) {
+		public static String getLocalizedName(GTMaterialFluid materialFluid) {
 			String s = materialFluid.getUnlocalizedName();
 			if (s == null)
 				return "";
@@ -32,7 +33,7 @@ public class HK_MaterialFluid {
 					} else {
 						langmapus.getDisplayNameThread = Thread.currentThread();
 					}
-					return HK_MaterialFluid.getLocalizedName(materialFluid);
+					return HK_GTMaterialFluid.getLocalizedName(materialFluid);
 				} catch (Exception e) {
 					e.printStackTrace();
 					return s;
@@ -47,18 +48,19 @@ public class HK_MaterialFluid {
 		}
 	}
 
-	private static String getLocalizedName(MaterialFluid materialFluid) {
+	private static String getLocalizedName(GTMaterialFluid materialFluid) {
 		String localizedName;
-		String customTranslationKey = "fluid." + materialFluid.getMaterial().getUnlocalizedName();
+		String customMaterialTranslation = "fluid." + materialFluid.getMaterial().getUnlocalizedName();
 
-		if (I18n.hasKey(customTranslationKey)) {
-			localizedName = I18n.format(customTranslationKey);
+		if (I18n.hasKey(customMaterialTranslation)) {
+			localizedName = I18n.format(customMaterialTranslation);
 		} else {
-			localizedName = I18n.format(materialFluid.getUnlocalizedName());
+			localizedName = I18n.format(materialFluid.getMaterial().getUnlocalizedName());
 		}
 
-		if (materialFluid.getFluidType() != null) {
-			return I18n.format(materialFluid.getFluidType().getLocalization(), localizedName);
+		String translationKey = MyReflectionHelper.getPrivateField(materialFluid, "translationKey");
+		if (translationKey != null) {
+			return I18n.format(translationKey, localizedName);
 		}
 		return localizedName;
 	}

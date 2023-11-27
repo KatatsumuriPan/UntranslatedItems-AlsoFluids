@@ -6,10 +6,10 @@ import kpan.uti_alsofluids.asm.core.adapters.MyClassVisitor;
 import kpan.uti_alsofluids.asm.core.adapters.ReplaceRefMethodAdapter;
 import org.objectweb.asm.ClassVisitor;
 
-public class TF_MaterialFluid {
+public class TF_GTFluid$GTMaterialFluid {
 
-	private static final String TARGET = "gregtech.api.fluids.MaterialFluid";
-	private static final String HOOK = AsmTypes.HOOK + "integration/gregtech/" + "HK_" + "MaterialFluid";
+	private static final String TARGET = "gregtech.api.fluids.GTFluid$GTMaterialFluid";
+	private static final String HOOK = AsmTypes.HOOK + "integration/gregtech/" + "HK_" + "GTMaterialFluid";
 
 	public static ClassVisitor appendVisitor(ClassVisitor cv, String className) {
 		if (TARGET.equals(className)) {
