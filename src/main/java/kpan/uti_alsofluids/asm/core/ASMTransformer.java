@@ -10,7 +10,7 @@ import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidTank;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidTerminal;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_AEFluidConfigSlot;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_AEFluidDisplayWidget;
-import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_MaterialFluid;
+import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_GTFluid$GTMaterialFluid;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_MetaTileEntityFluidHatch;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_MetaTileEntityQuantumTank;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_PhantomFluidWidget;
@@ -67,7 +67,7 @@ public class ASMTransformer implements IClassTransformer {
 			cv = TF_GuiFluidTank.appendVisitor(cv, transformedName);
 			cv = TF_GuiFluidTerminal.appendVisitor(cv, transformedName);
 			cv = TF_LanguageMapUs.appendVisitor(cv, transformedName);
-			cv = TF_MaterialFluid.appendVisitor(cv, transformedName);
+			cv = TF_GTFluid$GTMaterialFluid.appendVisitor(cv, transformedName);
 			cv = TF_MetaTileEntityQuantumTank.appendVisitor(cv, transformedName);
 			cv = TF_MetaTileEntityFluidHatch.appendVisitor(cv, transformedName);
 			cv = TF_TankWidget.appendVisitor(cv, transformedName);

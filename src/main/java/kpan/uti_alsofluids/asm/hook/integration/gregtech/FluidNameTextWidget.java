@@ -56,11 +56,9 @@ public class FluidNameTextWidget extends AdvancedTextWidget {
 			if (LocalizedName.showLocalize() && ConfigHolder.client.GregTechCEu.showLocalizedName) {
 				if (count == 1 && usNameText.get(0) instanceof TextComponentTranslation) {
 					TextComponentTranslation tct = (TextComponentTranslation) usNameText.get(0);
-					if (tct.getFormatArgs().length == 0) {
-						if (localizedNameText == null)
-							localizedNameText = new ArrayList<>();
-						localizedNameText.add(tct.createCopy());
-					}
+					if (localizedNameText == null)
+						localizedNameText = new ArrayList<>();
+					localizedNameText.add(tct.createCopy());
 				}
 			}
 
