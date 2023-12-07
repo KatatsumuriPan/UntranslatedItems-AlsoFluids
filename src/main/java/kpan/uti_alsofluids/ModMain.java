@@ -22,8 +22,8 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = ModReference.MOD_ID, name = ModReference.MOD_NAME
 		, guiFactory = ModReference.SRC_DIR + ".config.ModGuiFactory"
-		, dependencies = "required:untranslateditems@[1.0.0,);"
-		+ GTInternalTags.DEP_VERSION_STRING
+		, dependencies = "required-client:untranslateditems@[1.0.0,);"
+		+ "after:gregtech@[" + GTInternalTags.VERSION + ",);"
 		, acceptableRemoteVersions = BuildInfo.MAJOR_VERSION + "." + BuildInfo.MINOR_VERSION
 //
 //, serverSideOnly = true //サーバーのみにする場合に必要(acceptableRemoteVersionsを*に変えないとダメ)、デバッグ時はオフにする
