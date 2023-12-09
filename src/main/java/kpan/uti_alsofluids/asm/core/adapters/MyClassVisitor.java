@@ -1,8 +1,7 @@
 package kpan.uti_alsofluids.asm.core.adapters;
 
-import org.objectweb.asm.ClassVisitor;
-
 import kpan.uti_alsofluids.asm.core.AsmUtil;
+import org.objectweb.asm.ClassVisitor;
 
 public class MyClassVisitor extends ClassVisitor {
 
@@ -19,8 +18,19 @@ public class MyClassVisitor extends ClassVisitor {
 		this.successExpectedMinInclusive = Math.max(successExpectedMinInclusive, 0);
 		this.successExpectedMaxInclusive = Math.max(successExpectedMaxInclusive, 0);
 	}
-	public void setSuccessExpectedMin(int minInclusive) { successExpectedMinInclusive = Math.max(minInclusive, 0); }
-	public void setSuccessExpectedMax(int maxInclusive) { successExpectedMaxInclusive = Math.max(maxInclusive, 0); }
+	public MyClassVisitor setSuccessExpected(int successExpected) {
+		setSuccessExpectedMin(successExpected);
+		setSuccessExpectedMax(successExpected);
+		return this;
+	}
+	public MyClassVisitor setSuccessExpectedMin(int minInclusive) {
+		successExpectedMinInclusive = Math.max(minInclusive, 0);
+		return this;
+	}
+	public MyClassVisitor setSuccessExpectedMax(int maxInclusive) {
+		successExpectedMaxInclusive = Math.max(maxInclusive, 0);
+		return this;
+	}
 	protected void success() {
 		successed++;
 	}
@@ -30,11 +40,11 @@ public class MyClassVisitor extends ClassVisitor {
 		super.visitEnd();
 		if (successed < successExpectedMinInclusive || successed > successExpectedMaxInclusive) {
 			if (successExpectedMinInclusive == successExpectedMaxInclusive)
-				throw new RuntimeException("transform failed:" + nameForDebug + "\nexpected:" + successExpectedMinInclusive + "\nactual:" + successed);
+				throw new RuntimeException("class transform failed:" + nameForDebug + "\nexpected:" + successExpectedMinInclusive + "\nactual:" + successed);
 			else if (successExpectedMaxInclusive == Integer.MAX_VALUE)
-				throw new RuntimeException("transform failed:" + nameForDebug + "\nexpected: " + successExpectedMinInclusive + "~\nactual:" + successed);
+				throw new RuntimeException("class transform failed:" + nameForDebug + "\nexpected: " + successExpectedMinInclusive + "~\nactual:" + successed);
 			else
-				throw new RuntimeException("transform failed:" + nameForDebug + "\nexpected: " + successExpectedMinInclusive + "~" + successExpectedMaxInclusive + "\nactual:" + successed);
+				throw new RuntimeException("class transform failed:" + nameForDebug + "\nexpected: " + successExpectedMinInclusive + "~" + successExpectedMaxInclusive + "\nactual:" + successed);
 		}
 	}
 }

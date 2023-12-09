@@ -1,15 +1,14 @@
 package kpan.uti_alsofluids.asm.tf.integration.jei;
 
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-
 import kpan.uti_alsofluids.asm.core.AsmTypes;
 import kpan.uti_alsofluids.asm.core.AsmUtil;
 import kpan.uti_alsofluids.asm.core.adapters.Instructions;
 import kpan.uti_alsofluids.asm.core.adapters.Instructions.OpcodeVar;
 import kpan.uti_alsofluids.asm.core.adapters.MyClassVisitor;
 import kpan.uti_alsofluids.asm.core.adapters.ReplaceInstructionsAdapter;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class TF_FluidStackRenderer {
 

@@ -1,14 +1,13 @@
 package kpan.uti_alsofluids.asm.tf.integration.p455w0rd.wpt;
 
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.MethodVisitor;
-
 import kpan.uti_alsofluids.asm.core.AsmTypes;
 import kpan.uti_alsofluids.asm.core.AsmUtil;
 import kpan.uti_alsofluids.asm.core.adapters.Instructions;
 import kpan.uti_alsofluids.asm.core.adapters.MyClassVisitor;
 import kpan.uti_alsofluids.asm.core.adapters.ReplaceInstructionsAdapter;
 import net.minecraftforge.fml.common.Loader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
 
 public class TF_GuiCraft__ {
 

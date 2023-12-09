@@ -1,13 +1,15 @@
 package kpan.uti_alsofluids.asm.core;
 
+import kpan.uti_alsofluids.ModReference;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import kpan.uti_alsofluids.ModReference;
-
+@SuppressWarnings("unused")
 public class AsmTypes {
 
 	public static final String HOOK = ModReference.SRC_DIR.replace('.', '/') + "/asm/hook/";
+	public static final String ACC = ModReference.SRC_DIR.replace('.', '/') + "/asm/acc/";
 	public static final String VOID = "V";
 	public static final String BOOL = "Z";
 	public static final String CHAR = "C";
@@ -40,6 +42,7 @@ public class AsmTypes {
 	public static final String IBLOCKACCESS = "net/minecraft/world/IBlockAccess";
 	public static final String FLUID = "net/minecraftforge/fluids/Fluid";
 	public static final String FLUIDSTACK = "net/minecraftforge/fluids/FluidStack";
+	public static final String CONTAINER = "net/minecraft/inventory/Container";
 
 	public static final String METHOD_VOID = "()V";
 
@@ -74,34 +77,34 @@ public class AsmTypes {
 				if (c == ')')
 					break;
 				switch (c) {
-				case 'Z':
-				case 'C':
-				case 'B':
-				case 'S':
-				case 'I':
-				case 'J':
-				case 'F':
-				case 'D':
-					sb.append(c);
-					params.add(sb.toString());
-					sb.setLength(0);
-					index++;
-					break;
-				case '[':
-					sb.append('[');
-					index++;
-					break;
-				case 'L': {
-					int end_index = methodDesc.indexOf(';', index);
-					params.add(methodDesc.substring(index + 1, end_index));
-					index = end_index + 1;
-					break;
-				}
-				default:
-					throw new RuntimeException("Invalid Char:" + c);
+					case 'Z':
+					case 'C':
+					case 'B':
+					case 'S':
+					case 'I':
+					case 'J':
+					case 'F':
+					case 'D':
+						sb.append(c);
+						params.add(sb.toString());
+						sb.setLength(0);
+						index++;
+						break;
+					case '[':
+						sb.append('[');
+						index++;
+						break;
+					case 'L': {
+						int end_index = methodDesc.indexOf(';', index);
+						params.add(methodDesc.substring(index + 1, end_index));
+						index = end_index + 1;
+						break;
+					}
+					default:
+						throw new RuntimeException("Invalid Char:" + c);
 				}
 			}
-			return new MethodDesc(methodDesc.substring(index + 1), params.toArray(new String[params.size()]));
+			return new MethodDesc(methodDesc.substring(index + 1), params.toArray(new String[0]));
 		}
 
 		public final String returnDesc;
