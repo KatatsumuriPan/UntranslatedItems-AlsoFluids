@@ -22,6 +22,7 @@ public class ConfigHolder {
 		@BooleanValue(defaultValue = true)
 		public boolean showLocalizedName = true;
 		public AppliedEnergistcs2_ AppliedEnergistcs2 = new AppliedEnergistcs2_();
+		public FTBQuests_ FTBQuests = new FTBQuests_();
 		public GregTechCEu_ GregTechCEu = new GregTechCEu_();
 		public JustEnoughItems_ JEI = new JustEnoughItems_();
 		public TheOneProbe_ TheOneProbe = new TheOneProbe_();
@@ -37,6 +38,12 @@ public class ConfigHolder {
 
 		public static class GregTechCEu_ {
 			@Comment("Show the localized name of the fluid.") //
+			@BooleanValue(defaultValue = true)
+			public boolean showLocalizedName = true;
+		}
+
+		public static class FTBQuests_ {
+			@Comment("Show the localized name of the item and the fluid.") //
 			@BooleanValue(defaultValue = true)
 			public boolean showLocalizedName = true;
 		}
@@ -86,5 +93,5 @@ public class ConfigHolder {
 		}
 	}
 
-	public static String getVersion() {return "2";}
+	public static String getVersion() { return "2"; }
 }
