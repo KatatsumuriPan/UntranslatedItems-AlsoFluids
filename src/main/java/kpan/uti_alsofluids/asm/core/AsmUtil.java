@@ -130,8 +130,7 @@ public class AsmUtil {
 	@SuppressWarnings("unused")
 	public static MethodVisitor traceMethod(MethodVisitor mv, @Nullable String methodName) {
 		Textifier p = new MyTextifier(methodName);
-		TraceMethodVisitor tracemv = new TraceMethodVisitor(mv, p);
-		return tracemv;
+		return new TraceMethodVisitor(mv, p);
 	}
 
 	//MethodDescにも使用可能
@@ -154,8 +153,8 @@ public class AsmUtil {
 		throw new NotImplementedException("TODO");//TODO
 	}
 
-	public static int loadOpcode(String type) {
-		switch (type) {
+	public static int toLoadOpcode(String desc) {
+		switch (desc) {
 			case AsmTypes.BOOL:
 			case AsmTypes.CHAR:
 			case AsmTypes.BYTE:
@@ -172,8 +171,19 @@ public class AsmUtil {
 				return Opcodes.ALOAD;
 		}
 	}
+	public static int loadLocals(MethodVisitor mv, String[] descs, int offset) {
+		for (String desc : descs) {
+			int opcode = AsmUtil.toLoadOpcode(desc);
+			mv.visitVarInsn(opcode, offset);
+			if (opcode == Opcodes.LLOAD || opcode == Opcodes.DOUBLE)
+				offset += 2;
+			else
+				offset += 1;
+		}
+		return offset;
+	}
 
-	public static int returnOpcode(String type) {
+	public static int toReturnOpcode(String type) {
 		switch (type) {
 			case AsmTypes.VOID:
 				return Opcodes.RETURN;

@@ -1,23 +1,24 @@
 package kpan.uti_alsofluids.asm.core.adapters;
 
-import java.util.Arrays;
-
-import javax.annotation.Nullable;
-
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.MethodVisitor;
-
 import kpan.uti_alsofluids.asm.core.AsmUtil;
 import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper;
 import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper.MethodRemap;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Objects;
 
 public abstract class ReplaceMethodAdapter extends MyClassVisitor {
 
 	protected final String runtimeName;
 	protected final String runtimeDesc;
 	protected int access;
-	@Nullable protected String runtimeGenerics;
-	@Nullable protected String[] runtimeExceptions;//RuntimeExceptionではなくExceptionのRuntime名
+	@Nullable
+	protected String runtimeGenerics;
+	@Nullable
+	protected String[] runtimeExceptions;//RuntimeExceptionではなくExceptionのRuntime名
 	protected boolean useAccess = false;
 	protected boolean useGenerics = false;
 	protected boolean useExceptions = false;
@@ -34,9 +35,21 @@ public abstract class ReplaceMethodAdapter extends MyClassVisitor {
 		runtimeName = runtimeMethodName;
 		this.runtimeDesc = runtimeDesc;
 	}
-	public void setAccess(int access) { this.access = access; useAccess = true; }
-	public void setGenerics(String deobfGenerics) { runtimeGenerics = AsmUtil.runtimeMethodGenerics(deobfGenerics); useGenerics = true; }
-	public void setExceptions(String[] deobfExceptions) { runtimeExceptions = AsmUtil.runtimeExceptions(deobfExceptions); useExceptions = true; }
+	@SuppressWarnings("unused")
+	public void setAccess(int access) {
+		this.access = access;
+		useAccess = true;
+	}
+	@SuppressWarnings("unused")
+	public void setGenerics(String deobfGenerics) {
+		runtimeGenerics = AsmUtil.runtimeMethodGenerics(deobfGenerics);
+		useGenerics = true;
+	}
+	@SuppressWarnings("unused")
+	public void setExceptions(String[] deobfExceptions) {
+		runtimeExceptions = AsmUtil.runtimeExceptions(deobfExceptions);
+		useExceptions = true;
+	}
 
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
@@ -93,7 +106,7 @@ public abstract class ReplaceMethodAdapter extends MyClassVisitor {
 	}
 	//Java7との互換性のために、Objects.equalsを使用してない
 	private static boolean equals(Object a, Object b) {
-		return a == b || a != null && a.equals(b);
+		return Objects.equals(a, b);
 	}
 
 }

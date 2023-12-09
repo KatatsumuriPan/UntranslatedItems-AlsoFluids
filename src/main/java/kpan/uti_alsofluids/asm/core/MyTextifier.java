@@ -1,13 +1,12 @@
 package kpan.uti_alsofluids.asm.core;
 
-import javax.annotation.Nullable;
-
 import org.objectweb.asm.util.Textifier;
+
+import javax.annotation.Nullable;
 
 public class MyTextifier extends Textifier {
 	private final @Nullable String methodName;
 
-	public MyTextifier() { this(null); }
 	public MyTextifier(@Nullable String methodName) {
 		super(AsmUtil.ASM_VER);//引数アリじゃないとException投げる
 		this.methodName = methodName;
@@ -24,7 +23,7 @@ public class MyTextifier extends Textifier {
 			buf.append("//");
 			buf.append(MyAsmNameRemapper.getClassDeobfName(owner));
 			buf.append('.');
-			buf.append(MyAsmNameRemapper.tryGetFieldDeobfName(owner, name));
+			buf.append(MyAsmNameRemapper.obf2SrgFieldName(owner, name));
 			buf.append(' ');
 			buf.append(AsmUtil.deobfDesc(desc));
 		}

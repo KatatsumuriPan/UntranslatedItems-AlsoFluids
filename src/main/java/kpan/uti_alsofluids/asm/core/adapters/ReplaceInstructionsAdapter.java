@@ -1,17 +1,14 @@
 package kpan.uti_alsofluids.asm.core.adapters;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nonnull;
-
+import com.google.common.collect.Lists;
+import kpan.uti_alsofluids.asm.core.adapters.Instructions.Instr;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import com.google.common.collect.Lists;
-
-import kpan.uti_alsofluids.asm.core.adapters.Instructions.Instr;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 public class ReplaceInstructionsAdapter extends MyMethodVisitor {
 
@@ -148,7 +145,6 @@ public class ReplaceInstructionsAdapter extends MyMethodVisitor {
 		if (api < Opcodes.ASM5 || !check(Instr.methodInsn(opcode, owner, name, desc, itf)))
 			super.visitMethodInsn(opcode, owner, name, desc, itf);
 	}
-	@SuppressWarnings("deprecation")
 	@Override
 	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
 		if (api >= Opcodes.ASM5 || !check(Instr.methodInsn(opcode, owner, name, desc, opcode == Opcodes.INVOKEINTERFACE)))

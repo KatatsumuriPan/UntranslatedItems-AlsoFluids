@@ -1,8 +1,8 @@
 package kpan.uti_alsofluids.asm.core.adapters;
 
-import org.objectweb.asm.MethodVisitor;
-
 import kpan.uti_alsofluids.asm.core.adapters.Instructions.Instr;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class InjectInstructionsAdapter extends ReplaceInstructionsAdapter {
 
@@ -34,6 +34,18 @@ public class InjectInstructionsAdapter extends ReplaceInstructionsAdapter {
 		return new InjectInstructionsAdapter(mv, name, targets, instructions, -1);
 	}
 
+	public static ReplaceInstructionsAdapter beforeAfter(MethodVisitor mv, String name, Instructions targets, Instructions before, Instructions after) {
+		return new InjectInstructionsAdapter(mv, name, targets, before, 0) {
+			@Override
+			protected void visitAllInstructions() {
+				super.visitAllInstructions();
+				for (Instr instruction : after) {
+					instruction.visit(mv, this);
+				}
+
+			}
+		};
+	}
 	public static MethodVisitor injectFirst(MethodVisitor mv, String nameForDebug, final Instructions instructions) {
 		return new MyMethodVisitor(mv, nameForDebug) {
 			@Override
@@ -46,16 +58,25 @@ public class InjectInstructionsAdapter extends ReplaceInstructionsAdapter {
 			}
 		};
 	}
-	@Deprecated
-	public static MethodVisitor injectLast(MethodVisitor mv, String nameForDebug, final Instructions instructions) {
+	public static MethodVisitor injectBeforeReturns(MethodVisitor mv, String nameForDebug, final Instructions instructions) {
 		return new MyMethodVisitor(mv, nameForDebug) {
 			@Override
-			public void visitEnd() {
-				for (Instr instruction : instructions) {
-					instruction.visit(mv, this);
+			public void visitInsn(int opcode) {
+				if (opcode == Opcodes.IRETURN || opcode == Opcodes.LRETURN || opcode == Opcodes.FRETURN || opcode == Opcodes.DRETURN || opcode == Opcodes.ARETURN || opcode == Opcodes.RETURN) {
+					for (Instr instruction : instructions) {
+						instruction.visit(mv, this);
+					}
+					success();
 				}
-				success();
-				super.visitEnd();
+				super.visitInsn(opcode);
+			}
+
+			@Override
+			public void visitEnd() {
+				//RETURN���������Ă��ǂ��̂ŃV���[�g�J�b�g
+				if (mv != null) {
+					mv.visitEnd();
+				}
 			}
 		};
 	}

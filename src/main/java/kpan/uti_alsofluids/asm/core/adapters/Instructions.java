@@ -1,31 +1,29 @@
 package kpan.uti_alsofluids.asm.core.adapters;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-import javax.annotation.Nullable;
-
+import com.google.common.collect.Lists;
+import kpan.uti_alsofluids.asm.core.AsmUtil;
+import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper;
+import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper.FieldRemap;
+import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper.MethodRemap;
+import kpan.uti_alsofluids.asm.core.adapters.Instructions.Instr;
 import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import com.google.common.collect.Lists;
-
-import kpan.uti_alsofluids.asm.core.AsmUtil;
-import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper;
-import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper.FieldRemap;
-import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper.MethodRemap;
-import kpan.uti_alsofluids.asm.core.adapters.Instructions.Instr;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Objects;
 
 public class Instructions implements List<Instr> {
 	private final List<Instr> instructions;
 
-	public Instructions() { this(Lists.<Instr> newArrayList()); }
+	public Instructions() { this(Lists.newArrayList()); }
 	public Instructions(List<Instr> instructions) { this.instructions = instructions; }
 
 	public Instructions addInstr(Instr instr) {
@@ -115,39 +113,45 @@ public class Instructions implements List<Instr> {
 	public Instructions fload(int varIndex) { return varInsn(OpcodeVar.FLOAD, varIndex); }
 	public Instructions dload(int varIndex) { return varInsn(OpcodeVar.DLOAD, varIndex); }
 	public Instructions aload(int varIndex) { return varInsn(OpcodeVar.ALOAD, varIndex); }
+	public Instructions istore(int varIndex) { return varInsn(OpcodeVar.ISTORE, varIndex); }
+	public Instructions lstore(int varIndex) { return varInsn(OpcodeVar.LSTORE, varIndex); }
+	public Instructions fstore(int varIndex) { return varInsn(OpcodeVar.FSTORE, varIndex); }
+	public Instructions dstore(int varIndex) { return varInsn(OpcodeVar.DSTORE, varIndex); }
+	public Instructions astore(int varIndex) { return varInsn(OpcodeVar.ASTORE, varIndex); }
+
 
 	public Instructions rep() { return addInstr(Instr.REP); }
 
 	public static Instructions create(Instr... instructions) { return new Instructions(Lists.newArrayList(instructions)); }
 
 	public static class Instr {
-		public static final Instr REP = new Instr(0, null, new Object[0]) {
+		public static final Instr REP = new Instr(0, null) {
 			@Override
-			public void visit(MethodVisitor mv, MyMethodVisitor adapter) {}
+			public void visit(MethodVisitor mv, MyMethodVisitor adapter) { }
 			@Override
 			protected boolean isRep() { return true; }
 			@Override
 			protected boolean repEquals(Instr other) { return true; }
 		};
-		private static final Instr LDC_REP = new Instr(0, VisitType.LDC, new Object[0]) {
+		private static final Instr LDC_REP = new Instr(0, VisitType.LDC) {
 			@Override
-			public void visit(MethodVisitor mv, MyMethodVisitor adapter) {}
+			public void visit(MethodVisitor mv, MyMethodVisitor adapter) { }
 			@Override
 			protected boolean isRep() { return true; }
 			@Override
 			protected boolean repEquals(Instr other) { return other.type == VisitType.LDC; }
 		};
-		private static final Instr LABEL_REP = new Instr(0, VisitType.LABEL, new Object[0]) {
+		private static final Instr LABEL_REP = new Instr(0, VisitType.LABEL) {
 			@Override
-			public void visit(MethodVisitor mv, MyMethodVisitor adapter) {}
+			public void visit(MethodVisitor mv, MyMethodVisitor adapter) { }
 			@Override
 			protected boolean isRep() { return true; }
 			@Override
 			protected boolean repEquals(Instr other) { return other.type == VisitType.LABEL; }
 		};
-		private static final Instr JUMP_REP = new Instr(0, VisitType.JUMP, new Object[0]) {
+		private static final Instr JUMP_REP = new Instr(0, VisitType.JUMP) {
 			@Override
-			public void visit(MethodVisitor mv, MyMethodVisitor adapter) {}
+			public void visit(MethodVisitor mv, MyMethodVisitor adapter) { }
 			@Override
 			protected boolean isRep() { return true; }
 			@Override
@@ -160,14 +164,14 @@ public class Instructions implements List<Instr> {
 			private final String runtimeMethodName;
 
 			public InvokeRep(OpcodeMethod opcode, String runtimeOwner, String runtimeMethodName) {
-				super(opcode.opcode, VisitType.METHOD, new Object[0]);
+				super(opcode.opcode, VisitType.METHOD);
 				this.opcode = opcode;
 				this.runtimeOwner = runtimeOwner.replace('.', '/');
 				this.runtimeMethodName = runtimeMethodName;
 			}
 
 			@Override
-			public void visit(MethodVisitor mv, MyMethodVisitor adapter) {}
+			public void visit(MethodVisitor mv, MyMethodVisitor adapter) { }
 			@Override
 			protected boolean isRep() { return true; }
 			@Override
@@ -178,12 +182,20 @@ public class Instructions implements List<Instr> {
 					return false;
 				if (!runtimeOwner.equals(other.params[0]))
 					return false;
-				if (!runtimeMethodName.equals(other.params[1]))
-					return false;
-				return true;
+				return runtimeMethodName.equals(other.params[1]);
 			}
-			public boolean equals(InvokeRep other) {
+			@Override
+			public boolean equals(Object o) {
+				if (this == o)
+					return true;
+				if (o == null || getClass() != o.getClass())
+					return false;
+				InvokeRep other = (InvokeRep) o;
 				return opcode == other.opcode && runtimeOwner.equals(other.runtimeOwner) && runtimeMethodName.equals(other.runtimeMethodName);
+			}
+			@Override
+			public int hashCode() {
+				return Objects.hash(opcode, runtimeOwner, runtimeMethodName);
 			}
 		}
 
@@ -281,11 +293,11 @@ public class Instructions implements List<Instr> {
 			return new Instr(opcode, VisitType.VAR, varIndex);
 		}
 
-		private int opcode;
-		private Object[] params;
-		private VisitType type;
+		private final int opcode;
+		private final Object[] params;
+		private final VisitType type;
 
-		public Instr(int opcode, VisitType type, Object... params) {
+		Instr(int opcode, VisitType type, Object... params) {
 			this.opcode = opcode;
 			this.type = type;
 			this.params = params;
@@ -295,53 +307,53 @@ public class Instructions implements List<Instr> {
 			if (mv == null)
 				return;
 			switch (type) {
-			case DYNAMIC:
-				mv.visitInvokeDynamicInsn((String) params[0], (String) params[1], (Handle) params[2], (Object[]) params[3]);
-				break;
-			case FIELD:
-				mv.visitFieldInsn(opcode, (String) params[0], (String) params[1], (String) params[2]);
-				break;
-			case IINC:
-				mv.visitIincInsn((Integer) params[0], (Integer) params[1]);//なんかのエラーを防ぐためにintではなくInteger
-				break;
-			case INT:
-				mv.visitIntInsn(opcode, (Integer) params[0]);
-				break;
-			case INSN:
-				mv.visitInsn(opcode);
-				break;
-			case JUMP:
-				if (params[0] instanceof Label) {
-					mv.visitJumpInsn(opcode, (Label) params[0]);
-				} else {
-					if (adapter == null)
-						throw new IllegalArgumentException("the adapter must not be null to solve the label");
-					mv.visitJumpInsn(opcode, adapter.getLabel((Integer) params[0]));
-				}
-				break;
-			case LABEL:
-				if (params[0] instanceof Label) {
-					mv.visitLabel((Label) params[0]);
-				} else {
-					if (adapter == null)
-						throw new IllegalArgumentException("the adapter must not be null to solve the label");
-					mv.visitLabel(adapter.getLabel((Integer) params[0]));
-				}
-				break;
-			case LDC:
-				mv.visitLdcInsn(params[0]);
-				break;
-			case METHOD:
-				mv.visitMethodInsn(opcode, (String) params[0], (String) params[1], (String) params[2], (Boolean) params[3]);
-				break;
-			case TYPE:
-				mv.visitTypeInsn(opcode, (String) params[0]);
-				break;
-			case VAR:
-				mv.visitVarInsn(opcode, (Integer) params[0]);
-				break;
-			default:
-				throw new RuntimeException("Invalid Type:" + type);
+				case DYNAMIC:
+					mv.visitInvokeDynamicInsn((String) params[0], (String) params[1], (Handle) params[2], (Object[]) params[3]);
+					break;
+				case FIELD:
+					mv.visitFieldInsn(opcode, (String) params[0], (String) params[1], (String) params[2]);
+					break;
+				case IINC:
+					mv.visitIincInsn((Integer) params[0], (Integer) params[1]);//なんかのエラーを防ぐためにintではなくInteger
+					break;
+				case INT:
+					mv.visitIntInsn(opcode, (Integer) params[0]);
+					break;
+				case INSN:
+					mv.visitInsn(opcode);
+					break;
+				case JUMP:
+					if (params[0] instanceof Label) {
+						mv.visitJumpInsn(opcode, (Label) params[0]);
+					} else {
+						if (adapter == null)
+							throw new IllegalArgumentException("the adapter must not be null to solve the label");
+						mv.visitJumpInsn(opcode, adapter.getLabel((Integer) params[0]));
+					}
+					break;
+				case LABEL:
+					if (params[0] instanceof Label) {
+						mv.visitLabel((Label) params[0]);
+					} else {
+						if (adapter == null)
+							throw new IllegalArgumentException("the adapter must not be null to solve the label");
+						mv.visitLabel(adapter.getLabel((Integer) params[0]));
+					}
+					break;
+				case LDC:
+					mv.visitLdcInsn(params[0]);
+					break;
+				case METHOD:
+					mv.visitMethodInsn(opcode, (String) params[0], (String) params[1], (String) params[2], (Boolean) params[3]);
+					break;
+				case TYPE:
+					mv.visitTypeInsn(opcode, (String) params[0]);
+					break;
+				case VAR:
+					mv.visitVarInsn(opcode, (Integer) params[0]);
+					break;
+				default:
+					throw new RuntimeException("Invalid Type:" + type);
 			}
 		}
 
@@ -389,13 +401,6 @@ public class Instructions implements List<Instr> {
 				return false;
 			if (a.opcode != b.opcode)
 				return false;
-			if (a.type == VisitType.FIELD) {
-				//				System.out.println("A");
-				//				System.out.println(a.opcode + "\t" + a.params[0] + "." + a.params[1] + "\t" + a.params[2]);
-				//				System.out.println("B");
-				//				System.out.println(b.opcode + "\t" + b.params[0] + "." + b.params[1] + "\t" + b.params[2]);
-				//				System.out.println("Result:" + Arrays.equals(a.params, b.params));
-			}
 			return Arrays.equals(a.params, b.params);
 		}
 
@@ -415,12 +420,10 @@ public class Instructions implements List<Instr> {
 
 		@Override
 		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append(type);
-			sb.append("(");
-			sb.append(StringUtils.join(params, ","));
-			sb.append(")");
-			return sb.toString();
+			return type +
+					"(" +
+					StringUtils.join(params, ",") +
+					")";
 		}
 	}
 
@@ -439,7 +442,7 @@ public class Instructions implements List<Instr> {
 
 		public final int opcode;
 
-		private OpcodeVar(int opcode) { this.opcode = opcode; }
+		OpcodeVar(int opcode) { this.opcode = opcode; }
 	}
 
 	public enum OpcodeField {
@@ -451,7 +454,7 @@ public class Instructions implements List<Instr> {
 
 		public final int opcode;
 
-		private OpcodeField(int opcode) { this.opcode = opcode; }
+		OpcodeField(int opcode) { this.opcode = opcode; }
 	}
 
 	public enum OpcodeMethod {
@@ -463,7 +466,7 @@ public class Instructions implements List<Instr> {
 
 		public final int opcode;
 
-		private OpcodeMethod(int opcode) { this.opcode = opcode; }
+		OpcodeMethod(int opcode) { this.opcode = opcode; }
 	}
 
 	public enum OpcodeInt {
@@ -474,7 +477,7 @@ public class Instructions implements List<Instr> {
 
 		public final int opcode;
 
-		private OpcodeInt(int opcode) { this.opcode = opcode; }
+		OpcodeInt(int opcode) { this.opcode = opcode; }
 	}
 
 	public enum OpcodeJump {
@@ -500,7 +503,7 @@ public class Instructions implements List<Instr> {
 
 		public final int opcode;
 
-		private OpcodeJump(int opcode) { this.opcode = opcode; }
+		OpcodeJump(int opcode) { this.opcode = opcode; }
 	}
 
 	//Listインターフェース

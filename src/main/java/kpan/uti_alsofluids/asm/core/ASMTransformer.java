@@ -8,6 +8,7 @@ import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiCraft__;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidSlot;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidTank;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidTerminal;
+import kpan.uti_alsofluids.asm.tf.integration.ftbquests.TF_ButtonTask;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_AEFluidConfigSlot;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_AEFluidDisplayWidget;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_GTFluid$GTMaterialFluid;
@@ -55,6 +56,7 @@ public class ASMTransformer implements IClassTransformer {
 			ClassVisitor cv = cw;
 			cv = TF_AEFluidConfigSlot.appendVisitor(cv, transformedName);
 			cv = TF_AEFluidDisplayWidget.appendVisitor(cv, transformedName);
+			cv = TF_ButtonTask.appendVisitor(cv, transformedName);
 			cv = TF_Fluid.appendVisitor(cv, transformedName);
 			cv = TF_FluidRegistry_LAVA.appendVisitor(cv, transformedName);
 			cv = TF_FluidRegistry_WATER.appendVisitor(cv, transformedName);
