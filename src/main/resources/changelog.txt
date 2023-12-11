@@ -1,5 +1,7 @@
+version 1.6.1 :
+ Fix bug that null is displayed in the localized line of FTB Quests task.
 version 1.6.0 :
- Add FTBQuests compatibility.
+ Add FTB Quests compatibility.
 version 1.5.1 :
  Add ja_jp forge universal forge bucket localization.
  Fix bug that no localized name(obviously water) was displayed in Reservoir Hatch(GTCEu).

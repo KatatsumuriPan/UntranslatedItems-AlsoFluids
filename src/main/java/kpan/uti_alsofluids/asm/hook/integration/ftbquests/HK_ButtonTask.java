@@ -33,7 +33,7 @@ public class HK_ButtonTask {
 	public static void addLocalizedLine(ButtonTask self, List<String> list) {
 		if (LocalizedName.showLocalize() && ConfigHolder.client.FTBQuests.showLocalizedName) {
 			String localized = ((ACC_ButtonTask) self).get_localizedLine();
-			if (!list.get(list.size() - 1).equals(localized))
+			if (localized != null && !list.get(list.size() - 1).equals(localized))
 				list.add(TextFormatting.GRAY + localized);
 		}
 	}
