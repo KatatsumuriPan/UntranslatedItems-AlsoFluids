@@ -1,5 +1,9 @@
 # Change Log
 
+### [1.12.2-forge-1.7.0](https://github.com/KatatsumuriPan/UntranslatedItems-AlsoFluids/releases/tag/1.12.2-forge-1.7.0) - 2024-02-21
+
+- Add Better Questing compatibility.
+
 ### [1.12.2-1.6.1](https://github.com/KatatsumuriPan/UntranslatedItems-AlsoFluids/releases/tag/1.12.2-1.6.1) - 2023-12-11
 
 - Fix bug that null is displayed in the localized line of FTB Quests task.
