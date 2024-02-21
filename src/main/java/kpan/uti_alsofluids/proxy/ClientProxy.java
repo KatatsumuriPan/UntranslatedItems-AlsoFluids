@@ -1,6 +1,6 @@
 package kpan.uti_alsofluids.proxy;
 
-import kpan.uti_alsofluids.ModReference;
+import kpan.uti_alsofluids.ModTagsGenerated;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -15,7 +15,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerMultiItemModel(Item item, int meta, String filename, String id) {
-		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(new ResourceLocation(ModReference.MOD_ID, filename), id));
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(new ResourceLocation(ModTagsGenerated.MODID, filename), id));
 	}
 	@Override
 	public void registerOnlyClient() {

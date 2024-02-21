@@ -1,15 +1,14 @@
 package kpan.uti_alsofluids.asm.core;
 
-import kpan.uti_alsofluids.ModReference;
+import kpan.uti_alsofluids.ModTagsGenerated;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
 public class AsmTypes {
 
-	public static final String HOOK = ModReference.SRC_DIR.replace('.', '/') + "/asm/hook/";
-	public static final String ACC = ModReference.SRC_DIR.replace('.', '/') + "/asm/acc/";
+	public static final String HOOK = ModTagsGenerated.MODGROUP.replace('.', '/') + "/asm/hook/";
+	public static final String ACC = ModTagsGenerated.MODGROUP.replace('.', '/') + "/asm/acc/";
 	public static final String VOID = "V";
 	public static final String BOOL = "Z";
 	public static final String CHAR = "C";

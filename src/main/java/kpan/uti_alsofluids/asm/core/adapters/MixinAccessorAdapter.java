@@ -1,6 +1,6 @@
 package kpan.uti_alsofluids.asm.core.adapters;
 
-import kpan.uti_alsofluids.ModReference;
+import kpan.uti_alsofluids.ModTagsGenerated;
 import kpan.uti_alsofluids.asm.core.AccessTransformerForMixin;
 import kpan.uti_alsofluids.asm.core.AsmTypes;
 import kpan.uti_alsofluids.asm.core.AsmTypes.MethodDesc;
@@ -227,7 +227,7 @@ public class MixinAccessorAdapter extends MyClassVisitor {
 	private static String mixinTarget = null;
 
 	public static ClassVisitor transformAccessor(ClassVisitor cv, String transformedName) {
-		if (mixinTarget == null || !transformedName.startsWith(ModReference.SRC_DIR + ".asm.acc."))
+		if (mixinTarget == null || !transformedName.startsWith(ModTagsGenerated.MODGROUP + ".asm.acc."))
 			return cv;
 
 		cv = new MyClassVisitor(cv, transformedName, 0) {

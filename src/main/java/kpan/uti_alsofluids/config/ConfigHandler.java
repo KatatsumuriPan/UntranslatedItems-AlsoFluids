@@ -4,7 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Longs;
-import kpan.uti_alsofluids.ModReference;
+import kpan.uti_alsofluids.ModTagsGenerated;
 import kpan.uti_alsofluids.config.ConfigAnnotations.BooleanValue;
 import kpan.uti_alsofluids.config.ConfigAnnotations.Comment;
 import kpan.uti_alsofluids.config.ConfigAnnotations.DoubleValue;
@@ -37,7 +37,7 @@ public class ConfigHandler {
 
 	public static void preInit(FMLPreInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new ConfigEventHandler());
-		config = new Configuration(new File(event.getModConfigurationDirectory() + "/" + ModReference.MOD_ID + ".cfg"), ConfigHolder.getVersion(), true);
+		config = new Configuration(new File(event.getModConfigurationDirectory() + "/" + ModTagsGenerated.MODID + ".cfg"), ConfigHolder.getVersion(), true);
 		config.load();
 		ConfigHolder.updateVersion(config);
 		syncAll();

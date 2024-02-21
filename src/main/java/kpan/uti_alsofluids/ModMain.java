@@ -20,11 +20,11 @@ import org.apache.logging.log4j.Logger;
 //色々と問題があるので
 //.langをちゃんと使うのを推奨
 
-@Mod(modid = ModReference.MOD_ID, name = ModReference.MOD_NAME
-		, guiFactory = ModReference.SRC_DIR + ".config.ModGuiFactory"
+@Mod(modid = ModTagsGenerated.MODID, name = ModTagsGenerated.MODNAME
+		, guiFactory = ModTagsGenerated.MODGROUP + ".config.ModGuiFactory"
 		, dependencies = "required-client:untranslateditems@[1.0.0,);"
 		+ "after:gregtech@[" + GTInternalTags.VERSION + ",);"
-		, acceptableRemoteVersions = BuildInfo.MAJOR_VERSION + "." + BuildInfo.MINOR_VERSION
+		, acceptableRemoteVersions = ModTagsGenerated.VERSION_MAJOR + "." + ModTagsGenerated.VERSION_MINOR
 //
 //, serverSideOnly = true //サーバーのみにする場合に必要(acceptableRemoteVersionsを*に変えないとダメ)、デバッグ時はオフにする
 )
