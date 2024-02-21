@@ -8,6 +8,7 @@ import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiCraft__;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidSlot;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidTank;
 import kpan.uti_alsofluids.asm.tf.integration.ae2.TF_GuiFluidTerminal;
+import kpan.uti_alsofluids.asm.tf.integration.betterquesting.TF_PanelFluidSlot;
 import kpan.uti_alsofluids.asm.tf.integration.ftbquests.TF_ButtonTask;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_AEFluidConfigSlot;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_AEFluidDisplayWidget;
@@ -76,6 +77,7 @@ public class ASMTransformer implements IClassTransformer {
 			cv = TF_MetaTileEntityReservoirHatch.appendVisitor(cv, transformedName);
 			cv = TF_TankWidget.appendVisitor(cv, transformedName);
 			cv = TF_PhantomFluidWidget.appendVisitor(cv, transformedName);
+			cv = TF_PanelFluidSlot.appendVisitor(cv, transformedName);
 
 			if (cv == cw)
 				return bytes;

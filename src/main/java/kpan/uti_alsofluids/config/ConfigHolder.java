@@ -22,6 +22,7 @@ public class ConfigHolder {
 		@BooleanValue(defaultValue = true)
 		public boolean showLocalizedName = true;
 		public AppliedEnergistcs2_ AppliedEnergistcs2 = new AppliedEnergistcs2_();
+		public BetterQuesting_ BetterQuesting = new BetterQuesting_();
 		public FTBQuests_ FTBQuests = new FTBQuests_();
 		public GregTechCEu_ GregTechCEu = new GregTechCEu_();
 		public JustEnoughItems_ JEI = new JustEnoughItems_();
@@ -36,14 +37,20 @@ public class ConfigHolder {
 			public boolean showLocalizedNameOnCraftingStatus = true;
 		}
 
-		public static class GregTechCEu_ {
-			@Comment("Show the localized name of the fluid.") //
+		public static class BetterQuesting_ {
+			@Comment("Show the localized name of the item and the fluid.") //
 			@BooleanValue(defaultValue = true)
 			public boolean showLocalizedName = true;
 		}
 
 		public static class FTBQuests_ {
 			@Comment("Show the localized name of the item and the fluid.") //
+			@BooleanValue(defaultValue = true)
+			public boolean showLocalizedName = true;
+		}
+
+		public static class GregTechCEu_ {
+			@Comment("Show the localized name of the fluid.") //
 			@BooleanValue(defaultValue = true)
 			public boolean showLocalizedName = true;
 		}
