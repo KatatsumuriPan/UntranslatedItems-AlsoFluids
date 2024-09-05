@@ -6,7 +6,6 @@ import kpan.uti_alsofluids.ModTagsGenerated;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.Name;
-import org.apache.logging.log4j.LogManager;
 
 @IFMLLoadingPlugin.TransformerExclusions({ModTagsGenerated.MODGROUP + ".asm.core.", ModTagsGenerated.MODGROUP + ".asm.tf.", ModTagsGenerated.MODGROUP + ".util.MyReflectionHelper"})
 @Name("AsmPlugin")
@@ -14,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 public class AsmPlugin implements IFMLLoadingPlugin {
 
     public AsmPlugin() {
-        LogManager.getLogger().debug("This is " + (AsmUtil.isDeobfEnvironment() ? "deobf" : "obf") + " environment");
+        AsmUtil.LOGGER.debug("This is " + (AsmUtil.isDeobfEnvironment() ? "deobf" : "obf") + " environment");
     }
 
     @Override

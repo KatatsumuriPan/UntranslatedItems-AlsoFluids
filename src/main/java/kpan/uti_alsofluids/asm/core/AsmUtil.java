@@ -2,9 +2,12 @@ package kpan.uti_alsofluids.asm.core;
 
 import java.lang.reflect.Method;
 import javax.annotation.Nullable;
+import kpan.uti_alsofluids.ModTagsGenerated;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -13,6 +16,8 @@ import org.objectweb.asm.util.TraceMethodVisitor;
 
 public class AsmUtil {
     public static final int ASM_VER = Opcodes.ASM5;
+
+    public static final Logger LOGGER = LogManager.getLogger(ModTagsGenerated.MODNAME);
 
     public static boolean isDeobfEnvironment() { return FMLLaunchHandler.isDeobfuscatedEnvironment(); }
 
