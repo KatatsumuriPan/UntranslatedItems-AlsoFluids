@@ -1,5 +1,9 @@
 # Change Log
 
+### [1.12.2-forge-1.8.0](https://github.com/KatatsumuriPan/UntranslatedItems-AlsoFluids/releases/tag/1.12.2-forge-1.8.0) - 2024-09-06
+
+- Fix crashing bug with Fossils and Archeology Revival. (UTI's compat with Llibrary was broken.)
+
 ### [1.12.2-forge-1.7.0](https://github.com/KatatsumuriPan/UntranslatedItems-AlsoFluids/releases/tag/1.12.2-forge-1.7.0) - 2024-02-21
 
 - Add Better Questing compatibility.
