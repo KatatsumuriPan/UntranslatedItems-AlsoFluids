@@ -41,12 +41,18 @@ dependencies {
 
     implementation rfg.deobf("curse.maven:untranslated-items-401770:3151260")
     implementation rfg.deobf("curse.maven:ae2-extended-life-570458:4673868")
-    implementation rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:4904269")
+//    implementation rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:4904269")
     implementation rfg.deobf("curse.maven:ftb-library-legacy-forge-237167:2985811")
     implementation rfg.deobf("curse.maven:ftb-quests-forge-289412:3156637")
     implementation rfg.deobf("curse.maven:better-questing-238856:2950248")
+//    implementation rfg.deobf("curse.maven:theonesmeagle-977883:5972060")
 
     runtimeOnly rfg.deobf("curse.maven:codechicken-lib-1-8-242818:2779848") //gtceu
     runtimeOnly rfg.deobf("curse.maven:item-filters-309674:3003364") //ftbq
     runtimeOnly rfg.deobf("curse.maven:better-questing-standard-expansion-238857:2863771") //bq
+
+
+//    devOnlyNonPublishable rfg.deobf(project.files("libs/gregtech-1.12.2-2.8.7-beta.jar"))
+    devOnlyNonPublishable (project.files("libs/gregtech-1.12.2-2.8.7-beta.jar"))
+    implementation rfg.deobf("com.cleanroommc:modularui:2.5.0-rc4")
 }

@@ -1264,4 +1264,17 @@ minecraft {
     injectedTags.put 'VERSION_MINOR', modVersion.substring(p1 + 1, p2)
     injectedTags.put 'VERSION_PATCH', modVersion.substring(p2 + 1)
 }
+
+tasks.named('prepareObfModsFolder') {
+    doLast {
+        //mixinbooterのファイル名の先頭に`!`を付ける（mixinbooterがcoremodの中で最初に呼ばれないとClassNotFoundになる）
+        ant.move file: 'run/obfuscated/mods/mixinbooter-9.1.jar', tofile: 'run/obfuscated/mods/!mixinbooter-9.1.jar', overwrite: true
+        //libs内のファイルをコピーしてくれないので自分でやる
+        copy {
+            from "libs"
+            into 'run/obfuscated/mods'
+        }
+    }
+}
+
 //*****************End Basic*****************

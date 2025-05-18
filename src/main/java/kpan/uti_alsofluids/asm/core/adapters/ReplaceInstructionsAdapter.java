@@ -1,27 +1,31 @@
 package kpan.uti_alsofluids.asm.core.adapters;
 
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.function.Function;
+import javax.annotation.Nonnull;
 import kpan.uti_alsofluids.asm.core.adapters.Instructions.Instr;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-
 public class ReplaceInstructionsAdapter extends MyMethodVisitor {
 
 	protected final Instructions targets;
-	protected final Instructions instructions;
-	protected final ArrayList<Instr> holds = Lists.newArrayList();//Java7との互換性のために、ダイヤモンド演算子を使用してない
+	protected final Function<ArrayList<Instr>, Instructions> instructionFactory;
+	protected final ArrayList<Instr> holds = Lists.newArrayList();// Java7との互換性のために、ダイヤモンド演算子を使用してない
 
 	private int maxMatched = 0;
 
-	public ReplaceInstructionsAdapter(@Nonnull MethodVisitor mv, String name, Instructions targets, Instructions instructions) {
-		super(mv, name);
+	public ReplaceInstructionsAdapter(@Nonnull MethodVisitor mv, String nameForDebug, Instructions targets, Instructions instructions) {
+		this(mv, nameForDebug, targets, instrs -> instructions);
+	}
+
+	public ReplaceInstructionsAdapter(@Nonnull MethodVisitor mv, String nameForDebug, Instructions targets, Function<ArrayList<Instr>, Instructions> instructionFactory) {
+		super(mv, nameForDebug);
 		this.targets = targets;
-		this.instructions = instructions;
+		this.instructionFactory = instructionFactory;
 	}
 
 	protected final boolean check(Instr instr) {
@@ -60,7 +64,7 @@ public class ReplaceInstructionsAdapter extends MyMethodVisitor {
 	}
 
 	protected void visitAllInstructions() {
-		for (Instr instruction : instructions) {
+		for (Instr instruction : instructionFactory.apply(holds)) {
 			instruction.visit(mv, this);
 		}
 	}
@@ -131,7 +135,7 @@ public class ReplaceInstructionsAdapter extends MyMethodVisitor {
 	}
 	@Override
 	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
-		//これは最後のLOCALVARIABLEで呼ばれる
+		// これは最後のLOCALVARIABLEで呼ばれる
 		flushVisits();
 		super.visitLocalVariable(name, desc, signature, start, end, index);
 	}

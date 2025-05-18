@@ -1,8 +1,10 @@
 package kpan.uti_alsofluids.asm.tf.integration.gregtech;
 
+import java.util.function.Consumer;
 import kpan.uti_alsofluids.asm.core.AsmTypes;
+import kpan.uti_alsofluids.asm.core.AsmUtil;
 import kpan.uti_alsofluids.asm.core.adapters.Instructions;
-import kpan.uti_alsofluids.asm.core.adapters.Instructions.OpcodeInt;
+import kpan.uti_alsofluids.asm.core.adapters.Instructions.OpcodeMethod;
 import kpan.uti_alsofluids.asm.core.adapters.MyClassVisitor;
 import kpan.uti_alsofluids.asm.core.adapters.ReplaceInstructionsAdapter;
 import org.objectweb.asm.ClassVisitor;
@@ -12,7 +14,7 @@ import org.objectweb.asm.Opcodes;
 public class TF_MetaTileEntityReservoirHatch {
 
 	private static final String TARGET = "gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityReservoirHatch";
-	private static final String FLUID_NAME_TEXT_WIDGET = AsmTypes.HOOK + "integration/gregtech/" + "FluidNameTextWidget";
+	private static final String HOOK = AsmTypes.HOOK + "integration/gregtech/" + "HK_" + "MetaTileEntityReservoirHatch";
 
 	public static ClassVisitor appendVisitor(ClassVisitor cv, String className) {
 		if (TARGET.equals(className)) {
@@ -20,31 +22,17 @@ public class TF_MetaTileEntityReservoirHatch {
 				@Override
 				public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 					MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
-					if (name.equals("createTankUI")) {
+					if (access == Opcodes.ACC_PUBLIC && name.equals("buildUI")) {
 						mv = new ReplaceInstructionsAdapter(mv, name,
 								Instructions.create()
-										.typeInsn(Opcodes.NEW, "gregtech/api/gui/widgets/AdvancedTextWidget")
-										.insn(Opcodes.DUP)
-										.intInsn(OpcodeInt.BIPUSH, 11)
-										.intInsn(OpcodeInt.BIPUSH, 40)
-										.aload(0)
-										.aload(5)
-										.label(10)
-										.invokespecial(TARGET, "getFluidNameText", "(Lgregtech/api/gui/widgets/TankWidget;)Ljava/util/function/Consumer;")
-										.ldcInsn(0xFFFFFF)
-										.invokespecial("gregtech/api/gui/widgets/AdvancedTextWidget", "<init>", "(IILjava/util/function/Consumer;I)V")
+										.dynamicRep()
+										.labelRep()
+										.methodRep(OpcodeMethod.VIRTUAL, null, "textBuilder")
 								,
-								Instructions.create()
-										.typeInsn(Opcodes.NEW, FLUID_NAME_TEXT_WIDGET)
-										.insn(Opcodes.DUP)
-										.intInsn(OpcodeInt.BIPUSH, 11)
-										.intInsn(OpcodeInt.BIPUSH, 40)
-										.aload(0)
-										.aload(5)
-										.label(10)
-										.invokespecial(TARGET, "getFluidNameText", "(Lgregtech/api/gui/widgets/TankWidget;)Ljava/util/function/Consumer;")
-										.ldcInsn(0xFFFFFF)
-										.invokespecial(FLUID_NAME_TEXT_WIDGET, "<init>", "(IILjava/util/function/Consumer;I)V")
+								instructions -> Instructions.create()
+										.invokeStatic(HOOK, "getTextBuilder", AsmUtil.toMethodDesc(Consumer.class, Types.GT_FLUID_SYNC_HANDLER))
+										.addInstr(instructions.get(1)) // label
+										.addInstr(instructions.get(2)) // textBuilder()
 						);
 						success();
 					}

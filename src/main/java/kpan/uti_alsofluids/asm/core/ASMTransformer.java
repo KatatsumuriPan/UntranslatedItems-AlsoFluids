@@ -13,6 +13,7 @@ import kpan.uti_alsofluids.asm.tf.integration.ftbquests.TF_ButtonTask;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_AEFluidConfigSlot;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_AEFluidDisplayWidget;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_GTFluid$GTMaterialFluid;
+import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_GTFluidSlot;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_MetaTileEntityFluidHatch;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_MetaTileEntityQuantumTank;
 import kpan.uti_alsofluids.asm.tf.integration.gregtech.TF_MetaTileEntityReservoirHatch;
@@ -49,11 +50,11 @@ public class ASMTransformer implements IClassTransformer {
 				cr.accept(cv, 0);
 				return cw.toByteArray();
 			}
-			//byte配列を読み込み、利用しやすい形にする。
+			// byte配列を読み込み、利用しやすい形にする。
 			ClassReader cr = new ClassReader(bytes);
-			//これのvisitを呼ぶことによって情報が溜まっていく。
-			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);//maxStack,maxLocal,frameの全てを計算
-			//Adapterを通して書き換え出来るようにする。
+			// これのvisitを呼ぶことによって情報が溜まっていく。
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);// maxStack,maxLocal,frameの全てを計算
+			// Adapterを通して書き換え出来るようにする。
 			ClassVisitor cv = cw;
 			cv = TF_AEFluidConfigSlot.appendVisitor(cv, transformedName);
 			cv = TF_AEFluidDisplayWidget.appendVisitor(cv, transformedName);
@@ -75,6 +76,7 @@ public class ASMTransformer implements IClassTransformer {
 			cv = TF_MetaTileEntityFluidHatch.appendVisitor(cv, transformedName);
 			cv = TF_MetaTileEntityQuantumTank.appendVisitor(cv, transformedName);
 			cv = TF_MetaTileEntityReservoirHatch.appendVisitor(cv, transformedName);
+			cv = TF_GTFluidSlot.appendVisitor(cv, transformedName);
 			cv = TF_TankWidget.appendVisitor(cv, transformedName);
 			cv = TF_PhantomFluidWidget.appendVisitor(cv, transformedName);
 			cv = TF_PanelFluidSlot.appendVisitor(cv, transformedName);
@@ -82,12 +84,12 @@ public class ASMTransformer implements IClassTransformer {
 			if (cv == cw)
 				return bytes;
 
-			//元のクラスと同様の順番でvisitメソッドを呼んでくれる
+			// 元のクラスと同様の順番でvisitメソッドを呼んでくれる
 			cr.accept(cv, 0);
 
 			byte[] new_bytes = cw.toByteArray();
 
-			//Writer内の情報をbyte配列にして返す。
+			// Writer内の情報をbyte配列にして返す。
 			return new_bytes;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

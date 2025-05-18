@@ -1,6 +1,13 @@
 package kpan.uti_alsofluids.asm.core.adapters;
 
 import com.google.common.collect.Lists;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import kpan.uti_alsofluids.asm.core.AsmUtil;
 import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper;
 import kpan.uti_alsofluids.asm.core.MyAsmNameRemapper.FieldRemap;
@@ -11,14 +18,6 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
 
 public class Instructions implements List<Instr> {
 	private final List<Instr> instructions;
@@ -105,6 +104,9 @@ public class Instructions implements List<Instr> {
 	public Instructions methodRep(OpcodeMethod opcode, String runtimeOwner, String runtimeName) {
 		return addInstr(new Instr.InvokeRep(opcode, runtimeOwner, runtimeName));
 	}
+	public Instructions dynamicRep() {
+		return addInstr(Instr.dynamicRep());
+	}
 	public Instructions varInsn(OpcodeVar opcode, int varIndex) {
 		return addInstr(Instr.varInsn(opcode, varIndex));
 	}
@@ -157,16 +159,24 @@ public class Instructions implements List<Instr> {
 			@Override
 			protected boolean repEquals(Instr other) { return other.type == VisitType.JUMP; }
 		};
+		private static final Instr DYNAMIC_REP = new Instr(0, VisitType.DYNAMIC) {
+			@Override
+			public void visit(MethodVisitor mv, MyMethodVisitor adapter) { }
+			@Override
+			protected boolean isRep() { return true; }
+			@Override
+			protected boolean repEquals(Instr other) { return other.type == VisitType.DYNAMIC; }
+		};
 
 		public static class InvokeRep extends Instr {
 			private final OpcodeMethod opcode;
-			private final String runtimeOwner;
+			private final @Nullable String runtimeOwner;
 			private final String runtimeMethodName;
 
-			public InvokeRep(OpcodeMethod opcode, String runtimeOwner, String runtimeMethodName) {
+			public InvokeRep(OpcodeMethod opcode, @Nullable String runtimeOwner, String runtimeMethodName) {
 				super(opcode.opcode, VisitType.METHOD);
 				this.opcode = opcode;
-				this.runtimeOwner = runtimeOwner.replace('.', '/');
+				this.runtimeOwner = runtimeOwner != null ? runtimeOwner.replace('.', '/') : null;
 				this.runtimeMethodName = runtimeMethodName;
 			}
 
@@ -180,7 +190,7 @@ public class Instructions implements List<Instr> {
 					return false;
 				if (opcode.opcode != other.opcode)
 					return false;
-				if (!runtimeOwner.equals(other.params[0]))
+				if (runtimeOwner != null && !runtimeOwner.equals(other.params[0]))
 					return false;
 				return runtimeMethodName.equals(other.params[1]);
 			}
@@ -191,7 +201,7 @@ public class Instructions implements List<Instr> {
 				if (o == null || getClass() != o.getClass())
 					return false;
 				InvokeRep other = (InvokeRep) o;
-				return opcode == other.opcode && runtimeOwner.equals(other.runtimeOwner) && runtimeMethodName.equals(other.runtimeMethodName);
+				return opcode == other.opcode && (runtimeOwner == null || runtimeOwner.equals(other.runtimeOwner)) && runtimeMethodName.equals(other.runtimeMethodName);
 			}
 			@Override
 			public int hashCode() {
@@ -201,6 +211,9 @@ public class Instructions implements List<Instr> {
 
 		public static Instr dynamicInsn(String runtimeName, String runtimeDesc, Handle bsm, Object... bsmArgs) {
 			return new Instr(Opcodes.INVOKEDYNAMIC, VisitType.DYNAMIC, runtimeName, runtimeDesc.replace('.', '/'), bsm, bsmArgs);
+		}
+		public static Instr dynamicRep() {
+			return DYNAMIC_REP;
 		}
 		public static Instr fieldInsn(OpcodeField opcode, FieldRemap field) {
 			return fieldInsn(opcode.opcode, field);
@@ -314,7 +327,7 @@ public class Instructions implements List<Instr> {
 					mv.visitFieldInsn(opcode, (String) params[0], (String) params[1], (String) params[2]);
 					break;
 				case IINC:
-					mv.visitIincInsn((Integer) params[0], (Integer) params[1]);//なんかのエラーを防ぐためにintではなくInteger
+					mv.visitIincInsn((Integer) params[0], (Integer) params[1]);// なんかのエラーを防ぐためにintではなくInteger
 					break;
 				case INT:
 					mv.visitIntInsn(opcode, (Integer) params[0]);
@@ -506,7 +519,7 @@ public class Instructions implements List<Instr> {
 		OpcodeJump(int opcode) { this.opcode = opcode; }
 	}
 
-	//Listインターフェース
+	// Listインターフェース
 
 	@Override
 	public int size() { return instructions.size(); }
